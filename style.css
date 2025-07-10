@@ -148,8 +148,8 @@ footer {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 70%, #8FBC8F 70%, #8FBC8F 100%);
     z-index: 1000;
 }
@@ -157,7 +157,7 @@ footer {
 #game-area {
     position: relative;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     overflow: hidden;
 }
 
