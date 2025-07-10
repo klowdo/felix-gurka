@@ -13,9 +13,9 @@ class WorldExplorer {
         this.currentArea = null;
         this.worldData = null;
         
-        // Player position
-        this.playerX = 400;
-        this.playerY = 300;
+        // Player position (centered for larger canvas)
+        this.playerX = 600;
+        this.playerY = 400;
         this.playerSpeed = 3;
         
         // Exploration state
@@ -167,11 +167,14 @@ class WorldExplorer {
      */
     renderGardenElements(ctx, area) {
         const elements = [
-            { x: 100, y: 150, emoji: '🌻', size: 30 },
-            { x: 200, y: 100, emoji: '🌹', size: 25 },
-            { x: 600, y: 200, emoji: '🌷', size: 28 },
-            { x: 700, y: 400, emoji: '🌺', size: 32 },
-            { x: 150, y: 450, emoji: '🌼', size: 26 }
+            { x: 150, y: 200, emoji: '🌻', size: 30 },
+            { x: 300, y: 150, emoji: '🌹', size: 25 },
+            { x: 900, y: 250, emoji: '🌷', size: 28 },
+            { x: 1050, y: 500, emoji: '🌺', size: 32 },
+            { x: 200, y: 600, emoji: '🌼', size: 26 },
+            { x: 750, y: 400, emoji: '🌻', size: 28 },
+            { x: 450, y: 300, emoji: '🌹', size: 27 },
+            { x: 850, y: 650, emoji: '🌷', size: 30 }
         ];
         
         ctx.font = '30px Arial';
@@ -183,9 +186,11 @@ class WorldExplorer {
         // Add fruit trees if in fruit tree area
         if (area?.id === 'fruit_trees') {
             const trees = [
-                { x: 150, y: 250, emoji: '🌳' },
-                { x: 350, y: 180, emoji: '🌳' },
-                { x: 550, y: 320, emoji: '🌳' }
+                { x: 200, y: 350, emoji: '🌳' },
+                { x: 500, y: 250, emoji: '🌳' },
+                { x: 800, y: 400, emoji: '🌳' },
+                { x: 350, y: 550, emoji: '🌳' },
+                { x: 950, y: 300, emoji: '🌳' }
             ];
             
             ctx.font = '40px Arial';
@@ -200,14 +205,18 @@ class WorldExplorer {
      */
     renderForestElements(ctx, area) {
         const trees = [
-            { x: 50, y: 120, emoji: '🌲', size: 45 },
-            { x: 180, y: 80, emoji: '🌲', size: 40 },
-            { x: 320, y: 150, emoji: '🌲', size: 50 },
-            { x: 480, y: 90, emoji: '🌲', size: 42 },
-            { x: 650, y: 180, emoji: '🌲', size: 48 },
-            { x: 120, y: 350, emoji: '🌲', size: 38 },
-            { x: 400, y: 400, emoji: '🌲', size: 44 },
-            { x: 600, y: 450, emoji: '🌲', size: 41 }
+            { x: 80, y: 180, emoji: '🌲', size: 45 },
+            { x: 250, y: 120, emoji: '🌲', size: 40 },
+            { x: 450, y: 200, emoji: '🌲', size: 50 },
+            { x: 680, y: 140, emoji: '🌲', size: 42 },
+            { x: 900, y: 250, emoji: '🌲', size: 48 },
+            { x: 150, y: 450, emoji: '🌲', size: 38 },
+            { x: 550, y: 500, emoji: '🌲', size: 44 },
+            { x: 850, y: 550, emoji: '🌲', size: 41 },
+            { x: 350, y: 350, emoji: '🌲', size: 46 },
+            { x: 750, y: 400, emoji: '🌲', size: 43 },
+            { x: 1000, y: 450, emoji: '🌲', size: 39 },
+            { x: 200, y: 650, emoji: '🌲', size: 47 }
         ];
         
         trees.forEach(tree => {
@@ -218,8 +227,10 @@ class WorldExplorer {
         // Add mysterious elements for deep woods
         if (area?.id === 'deep_woods' || area?.id === 'ancient_grove') {
             ctx.font = '35px Arial';
-            ctx.fillText('🍄', 250, 380);
-            ctx.fillText('🍄', 520, 280);
+            ctx.fillText('🍄', 400, 480);
+            ctx.fillText('🍄', 700, 350);
+            ctx.fillText('🍄', 300, 600);
+            ctx.fillText('🍄', 950, 500);
         }
     }
 
@@ -231,9 +242,11 @@ class WorldExplorer {
         const area = this.getCurrentAreaData();
         if (area && area.encounterRate > 0.25) {
             const sparkles = [
-                { x: 300, y: 200 },
-                { x: 500, y: 350 },
-                { x: 150, y: 300 }
+                { x: 450, y: 300 },
+                { x: 750, y: 450 },
+                { x: 250, y: 400 },
+                { x: 950, y: 350 },
+                { x: 550, y: 600 }
             ];
             
             ctx.font = '20px Arial';
@@ -428,9 +441,9 @@ class WorldExplorer {
         if (this.keys['a'] || this.keys['arrowleft']) deltaX -= this.playerSpeed;
         if (this.keys['d'] || this.keys['arrowright']) deltaX += this.playerSpeed;
         
-        // Apply movement with bounds checking
-        this.playerX = Math.max(20, Math.min(this.playerX + deltaX, 780));
-        this.playerY = Math.max(40, Math.min(this.playerY + deltaY, 580));
+        // Apply movement with bounds checking (adjusted for larger canvas)
+        this.playerX = Math.max(30, Math.min(this.playerX + deltaX, 1170));
+        this.playerY = Math.max(60, Math.min(this.playerY + deltaY, 770));
     }
 
     /**
@@ -445,8 +458,8 @@ class WorldExplorer {
             const moveX = (deltaX / distance) * this.playerSpeed * 2;
             const moveY = (deltaY / distance) * this.playerSpeed * 2;
             
-            this.playerX = Math.max(20, Math.min(this.playerX + moveX, 780));
-            this.playerY = Math.max(40, Math.min(this.playerY + moveY, 580));
+            this.playerX = Math.max(30, Math.min(this.playerX + moveX, 1170));
+            this.playerY = Math.max(60, Math.min(this.playerY + moveY, 770));
         }
     }
 
@@ -552,23 +565,23 @@ class WorldExplorer {
      * Set starting position based on area
      */
     setStartingPosition(areaId) {
-        // Set different starting positions for different areas
+        // Set different starting positions for different areas (adjusted for larger canvas)
         switch (areaId) {
             case 'vegetable_patch':
-                this.playerX = 100;
-                this.playerY = 400;
+                this.playerX = 150;
+                this.playerY = 600;
                 break;
             case 'fruit_trees':
-                this.playerX = 200;
-                this.playerY = 300;
+                this.playerX = 300;
+                this.playerY = 450;
                 break;
             case 'flower_meadow':
-                this.playerX = 400;
-                this.playerY = 350;
+                this.playerX = 600;
+                this.playerY = 500;
                 break;
             default:
-                this.playerX = 400;
-                this.playerY = 300;
+                this.playerX = 600;
+                this.playerY = 400;
         }
     }
 

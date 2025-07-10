@@ -94,7 +94,7 @@ class CucumberWorld {
                     </div>
                 </div>
                 <div class="game-content">
-                    <canvas id="cw-game-canvas" width="800" height="600"></canvas>
+                    <canvas id="cw-game-canvas" width="1200" height="800"></canvas>
                     <div id="cw-ui-overlay" class="ui-overlay"></div>
                 </div>
                 <div class="game-footer">
@@ -123,20 +123,23 @@ class CucumberWorld {
         const container = this.canvas.parentElement;
         const containerRect = container.getBoundingClientRect();
         
-        // Maintain 4:3 aspect ratio
-        const aspectRatio = 4 / 3;
-        let width = containerRect.width - 20; // padding
+        // Maintain 3:2 aspect ratio for better widescreen experience
+        const aspectRatio = 3 / 2;  // 1200:800 = 3:2
+        let width = Math.min(containerRect.width - 40, 1200); // padding and max width
         let height = width / aspectRatio;
         
-        if (height > containerRect.height - 20) {
-            height = containerRect.height - 20;
+        if (height > containerRect.height - 40) {
+            height = containerRect.height - 40;
             width = height * aspectRatio;
         }
         
-        this.canvas.width = width;
-        this.canvas.height = height;
+        // Set canvas size
         this.canvas.style.width = width + 'px';
         this.canvas.style.height = height + 'px';
+        
+        // Keep internal resolution high for crisp graphics
+        this.canvas.width = 1200;
+        this.canvas.height = 800;
     }
 
     /**

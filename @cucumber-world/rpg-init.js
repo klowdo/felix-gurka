@@ -92,7 +92,7 @@ class CucumberWorldInit {
                     </div>
                 </div>
                 <div class="game-content">
-                    <canvas id="cw-game-canvas" width="800" height="600"></canvas>
+                    <canvas id="cw-game-canvas" width="1200" height="800"></canvas>
                     <div id="cw-ui-overlay" class="ui-overlay"></div>
                 </div>
                 <div class="game-footer">

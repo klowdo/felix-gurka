@@ -86,8 +86,10 @@
     border-radius: 15px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     background: #87CEEB;
-    max-width: 100%;
+    width: 100%;
+    max-width: 1200px;
     height: auto;
+    min-height: 600px;
 }
 
 .ui-overlay {
@@ -267,7 +269,8 @@
     
     #cw-game-canvas {
         width: 100%;
-        max-width: 500px;
+        max-width: 100%;
+        min-height: 400px;
     }
     
     .rpg-intro h2 {
