@@ -78,11 +78,22 @@ class CucumberGame {
         setTimeout(() => {
             this.player.classList.remove('jumping');
             this.isJumping = false;
-        }, 800);
+        }, 1000);
     }
 
     createObstacle() {
         if (!this.isGameRunning) return;
+
+        // Check if last obstacle is far enough away
+        const lastObstacle = this.obstacles[this.obstacles.length - 1];
+        if (lastObstacle) {
+            const lastObstaclePosition = parseInt(lastObstacle.style.right) || 0;
+            const minDistance = 300; // Minimum pixels between obstacles
+            if (lastObstaclePosition < minDistance) {
+                setTimeout(() => this.createObstacle(), 200);
+                return;
+            }
+        }
 
         const obstacle = document.createElement('div');
         obstacle.className = 'obstacle';
@@ -91,7 +102,10 @@ class CucumberGame {
         this.gameArea.appendChild(obstacle);
         this.obstacles.push(obstacle);
 
-        const nextObstacleDelay = Math.random() * 3000 + 800;
+        const baseDelay = 1500; // Minimum safe distance
+        const variableDelay = Math.random() * 2000; // 0-2000ms additional
+        const scoreSpeedAdjustment = Math.max(0, 500 - (this.score * 2)); // Reduce delay as score increases
+        const nextObstacleDelay = baseDelay + variableDelay + scoreSpeedAdjustment;
         setTimeout(() => this.createObstacle(), nextObstacleDelay);
     }
 
