@@ -1,0 +1,35 @@
+{
+  "name": "felix-gurka-website",
+  "version": "1.0.0",
+  "description": "Felix Gurka website with Cucumber World RPG game",
+  "main": "index.html",
+  "scripts": {
+    "dev": "live-server --port=8000 --open=/",
+    "serve": "serve . -p 8000",
+    "start": "http-server . -p 8000 -o",
+    "build": "echo 'Static site - no build needed'",
+    "preview": "serve . -p 8080"
+  },
+  "keywords": [
+    "cucumber",
+    "rpg",
+    "game",
+    "website",
+    "felix"
+  ],
+  "author": "Felix Gurka Fan Club",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.1",
+    "live-server": "^1.2.2",
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/klowdo/felix-gurka.git"
+  },
+  "homepage": "https://gurka.flixen.se"
+}
