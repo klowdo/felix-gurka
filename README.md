@@ -6,10 +6,23 @@ A delightful website featuring Felix the cucumber with two exciting games:
 
 ## 🚀 Quick Start
 
-### Using Nix Flake (Recommended)
+### Using Nix Flake with direnv (Recommended)
 
 ```bash
-# Enter development environment
+# First time setup - allow direnv to auto-enter the environment
+direnv allow
+
+# Now just cd into the directory to auto-enter dev environment
+cd /path/to/felix-gurka
+
+# Start development server with live reload
+npm run dev
+```
+
+### Using Nix Flake manually
+
+```bash
+# Enter development environment manually
 nix develop
 
 # Start development server with live reload
@@ -54,6 +67,21 @@ npm run dev
 - WASD movement controls
 
 ## 🛠️ Development
+
+### direnv Setup (One-time)
+
+If you have direnv installed, you can automatically enter the development environment:
+
+```bash
+# Install direnv (if not already installed)
+# On NixOS: add to configuration.nix
+# On other systems: nix profile install nixpkgs#direnv
+
+# Allow direnv for this project
+direnv allow
+
+# Now the environment loads automatically when you cd into the directory!
+```
 
 ### Available Scripts
 

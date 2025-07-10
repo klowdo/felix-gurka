@@ -19,6 +19,9 @@
             nodePackages.serve
             nodePackages.live-server
             nodePackages.http-server
+            # Development tools
+            direnv
+            git
           ];
 
           shellHook = ''
@@ -26,17 +29,21 @@
             echo "=========================================="
             echo ""
             echo "Available commands:"
-            echo "  serve           - Simple static server (npx serve)"
-            echo "  live-server     - Live-reload development server"
+            echo "  npm run dev     - Live-reload development server"
+            echo "  serve .         - Simple static server"
+            echo "  live-server     - Live-reload server"
             echo "  http-server     - Basic HTTP server"
             echo ""
             echo "Quick start:"
+            echo "  npm run dev     - Start development (recommended)"
             echo "  serve .         - Serve current directory"
-            echo "  live-server     - Start with live reload"
             echo ""
-            echo "Node.js version: $(node --version)"
-            echo "NPM version: $(npm --version)"
+            echo "Tools:"
+            echo "  Node.js version: $(node --version)"
+            echo "  NPM version: $(npm --version)"
+            echo "  direnv: $(direnv --version 2>/dev/null || echo 'available')"
             echo ""
+            echo "💡 Tip: Use 'direnv allow' to auto-enter this environment"
             echo "Ready to develop! 🚀"
           '';
 
