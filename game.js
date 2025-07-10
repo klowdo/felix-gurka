@@ -56,11 +56,6 @@ class CucumberGame {
         console.log('Player element:', this.player);
         console.log('Score element:', this.scoreElement);
         
-        // Force styles for debugging
-        this.gameContainer.style.backgroundColor = 'red';
-        this.gameContainer.style.border = '5px solid black';
-        this.player.style.backgroundColor = 'yellow';
-        this.player.style.border = '2px solid blue';
 
         this.isGameRunning = true;
         this.score = 0;

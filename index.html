@@ -21,20 +21,6 @@
             </div>
         </section>
 
-        <!-- Game Container -->
-        <div id="game-container" class="game-hidden">
-            <div id="game-area">
-                <div id="score">Poäng: 0</div>
-                <div id="cucumber-player">🥒</div>
-                <div id="ground"></div>
-                <div id="game-over" class="game-hidden">
-                    <h2>Game Over!</h2>
-                    <p>Poäng: <span id="final-score">0</span></p>
-                    <button id="restart-btn">Spela igen</button>
-                    <button id="back-btn">Tillbaka till hemsidan</button>
-                </div>
-            </div>
-        </div>
 
         <section class="about">
             <h2>Om Felix</h2>
@@ -61,6 +47,21 @@
             </div>
         </section>
     </main>
+
+    <!-- Game Container moved outside main -->
+    <div id="game-container" class="game-hidden">
+        <div id="game-area">
+            <div id="score">Poäng: 0</div>
+            <div id="cucumber-player">🥒</div>
+            <div id="ground"></div>
+            <div id="game-over" class="game-hidden">
+                <h2>Game Over!</h2>
+                <p>Poäng: <span id="final-score">0</span></p>
+                <button id="restart-btn">Spela igen</button>
+                <button id="back-btn">Tillbaka till hemsidan</button>
+            </div>
+        </div>
+    </div>
 
     <footer>
         <p>&copy; 2024 Felix Gurka Fan Club. Alla rättigheter förbehållna.</p>
