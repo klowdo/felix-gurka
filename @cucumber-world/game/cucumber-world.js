@@ -20,12 +20,13 @@ class CucumberWorld {
         // Game state
         this.currentSave = null;
         this.currentSlot = null;
-        this.gameState = 'menu'; // menu, loading, world, battle, inventory
+        this.gameState = 'menu'; // menu, loading, world, battle, inventory, newgame
         this.isInitialized = false;
         
         // UI state
         this.selectedSaveSlot = 1;
-        this.showNewGameDialog = false;
+        this.selectedMenuOption = 0;
+        this.playerNameInput = '';
         
         // Performance
         this.lastFrameTime = 0;
@@ -254,6 +255,9 @@ class CucumberWorld {
             case 'inventory':
                 this.renderInventoryView();
                 break;
+            case 'newgame':
+                this.renderNewGameForm();
+                break;
         }
 
         // Render UI overlay
@@ -387,6 +391,100 @@ class CucumberWorld {
     }
 
     /**
+     * Render new game form
+     */
+    renderNewGameForm() {
+        const ctx = this.ctx;
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+
+        // Background gradient
+        const gradient = ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+        gradient.addColorStop(0, '#98FB98');
+        gradient.addColorStop(1, '#90EE90');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Form background
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+        ctx.fillRect(centerX - 300, centerY - 200, 600, 400);
+        
+        // Form border
+        ctx.strokeStyle = '#2F4F2F';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(centerX - 300, centerY - 200, 600, 400);
+
+        // Title
+        ctx.fillStyle = '#2F4F2F';
+        ctx.font = 'bold 32px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('🥒 Start New Adventure 🥒', centerX, centerY - 140);
+
+        // Subtitle
+        ctx.font = '18px Arial';
+        ctx.fillText('Enter your name to begin exploring Cucumber World!', centerX, centerY - 100);
+
+        // Name input label
+        ctx.font = 'bold 20px Arial';
+        ctx.textAlign = 'left';
+        ctx.fillText('Player Name:', centerX - 250, centerY - 50);
+
+        // Input field background
+        ctx.fillStyle = 'white';
+        ctx.fillRect(centerX - 250, centerY - 30, 500, 40);
+        ctx.strokeStyle = '#4CAF50';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(centerX - 250, centerY - 30, 500, 40);
+
+        // Show current input
+        ctx.fillStyle = '#2F4F2F';
+        ctx.font = '18px Arial';
+        ctx.textAlign = 'left';
+        const inputText = this.playerNameInput || '';
+        ctx.fillText(inputText + (Date.now() % 1000 < 500 ? '|' : ''), centerX - 240, centerY - 8);
+
+        // Buttons
+        this.renderButton(ctx, centerX - 100, centerY + 50, 200, 40, 'Start Game', '#4CAF50');
+        this.renderButton(ctx, centerX - 100, centerY + 110, 200, 40, 'Back to Menu', '#f44336');
+
+        // Instructions
+        ctx.fillStyle = '#666';
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Type your name and click "Start Game" or press Enter', centerX, centerY + 170);
+    }
+
+    /**
+     * Render a button
+     */
+    renderButton(ctx, x, y, width, height, text, color) {
+        // Button background
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, width, height);
+        
+        // Button border
+        ctx.strokeStyle = this.darkenColor(color, 0.2);
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, y, width, height);
+        
+        // Button text
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 16px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(text, x + width/2, y + height/2 + 5);
+    }
+
+    /**
+     * Darken a color
+     */
+    darkenColor(color, percent) {
+        // Simple color darkening - in production you'd want a more robust solution
+        if (color === '#4CAF50') return '#45a049';
+        if (color === '#f44336') return '#da190b';
+        return color;
+    }
+
+    /**
      * Render UI overlay
      */
     renderUI() {
@@ -429,6 +527,9 @@ class CucumberWorld {
             case 'menu':
                 this.handleMenuClick(canvasX, canvasY);
                 break;
+            case 'newgame':
+                this.handleNewGameClick(canvasX, canvasY);
+                break;
             case 'world':
                 if (this.worldExplorer) {
                     this.worldExplorer.handleClick(canvasX, canvasY);
@@ -441,17 +542,60 @@ class CucumberWorld {
      * Handle menu clicks
      */
     handleMenuClick(x, y) {
-        // Simple menu click detection - you'd want more precise hit detection
         const centerX = this.canvas.width / 2;
         const centerY = this.canvas.height / 2;
         
-        // Check if click is in menu area
-        if (x > centerX - 100 && x < centerX + 100) {
-            if (y > centerY - 20 && y < centerY + 30) {
-                this.startNewGame();
-            } else if (y > centerY + 30 && y < centerY + 80) {
-                this.showLoadGameMenu();
+        // Check menu option clicks
+        const menuOptions = ['New Game', 'Load Game', 'Settings', 'About'];
+        
+        for (let i = 0; i < menuOptions.length; i++) {
+            const optionY = centerY - 20 + (i * 50);
+            if (x > centerX - 120 && x < centerX + 120 && 
+                y > optionY - 20 && y < optionY + 20) {
+                this.selectedMenuOption = i;
+                this.handleMenuSelect();
+                break;
             }
+        }
+    }
+
+    /**
+     * Handle new game form clicks
+     */
+    handleNewGameClick(x, y) {
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+        
+        // Start Game button
+        if (x > centerX - 100 && x < centerX + 100 && 
+            y > centerY + 50 && y < centerY + 90) {
+            this.confirmNewGame();
+        }
+        
+        // Back to Menu button
+        if (x > centerX - 100 && x < centerX + 100 && 
+            y > centerY + 110 && y < centerY + 150) {
+            this.showMainMenu();
+        }
+    }
+
+    /**
+     * Handle menu selection
+     */
+    handleMenuSelect() {
+        switch (this.selectedMenuOption) {
+            case 0: // New Game
+                this.showNewGameForm();
+                break;
+            case 1: // Load Game
+                this.showLoadGameMenu();
+                break;
+            case 2: // Settings
+                this.showMessage('Settings coming soon!');
+                break;
+            case 3: // About
+                this.showMessage('Cucumber World RPG v1.0 - Made with 💚');
+                break;
         }
     }
 
@@ -459,6 +603,35 @@ class CucumberWorld {
      * Handle keyboard events
      */
     handleKeyDown(event) {
+        // Prevent arrow keys from scrolling the page when game is active
+        if (this.gameState !== 'menu' && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+            event.preventDefault();
+        }
+        
+        // Handle new game form input
+        if (this.gameState === 'newgame') {
+            if (event.key === 'Escape') {
+                this.showMainMenu();
+                return;
+            }
+            
+            if (event.key === 'Enter') {
+                this.confirmNewGame();
+                return;
+            }
+            
+            if (event.key === 'Backspace') {
+                this.playerNameInput = this.playerNameInput.slice(0, -1);
+                return;
+            }
+            
+            // Add character if it's a valid input
+            if (event.key.length === 1 && this.playerNameInput.length < 20) {
+                this.playerNameInput += event.key;
+                return;
+            }
+        }
+        
         switch (event.key) {
             case 'Escape':
                 this.showMainMenu();
@@ -466,6 +639,16 @@ class CucumberWorld {
             case 'Enter':
                 if (this.gameState === 'menu') {
                     this.handleMenuSelect();
+                }
+                break;
+            case 'ArrowUp':
+                if (this.gameState === 'menu') {
+                    this.selectedMenuOption = Math.max(0, this.selectedMenuOption - 1);
+                }
+                break;
+            case 'ArrowDown':
+                if (this.gameState === 'menu') {
+                    this.selectedMenuOption = Math.min(3, this.selectedMenuOption + 1);
                 }
                 break;
         }
@@ -481,14 +664,28 @@ class CucumberWorld {
     }
 
     /**
-     * Start a new game
+     * Show new game form
      */
-    async startNewGame() {
+    showNewGameForm() {
+        this.gameState = 'newgame';
+        this.playerNameInput = '';
+    }
+
+    /**
+     * Confirm new game creation
+     */
+    async confirmNewGame() {
+        const playerName = this.playerNameInput.trim() || 'Player';
+        
+        if (playerName.length < 1) {
+            this.showMessage('Please enter a valid name!');
+            return;
+        }
+
         try {
             this.gameState = 'loading';
             
             // Create new save
-            const playerName = prompt('Enter your name:') || 'Player';
             this.currentSave = this.saveManager.createNewSave(1, playerName);
             this.currentSlot = 1;
             
@@ -496,13 +693,21 @@ class CucumberWorld {
             await this.loadWorldExplorer();
             
             this.gameState = 'world';
-            document.getElementById('cw-save-btn').style.display = 'inline-block';
+            const saveBtn = document.getElementById('cw-save-btn');
+            if (saveBtn) saveBtn.style.display = 'inline-block';
             
             console.log('New game started');
         } catch (error) {
             console.error('Failed to start new game:', error);
             this.gameState = 'menu';
         }
+    }
+
+    /**
+     * Start a new game (legacy method for compatibility)
+     */
+    async startNewGame() {
+        this.showNewGameForm();
     }
 
     /**

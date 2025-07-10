@@ -416,10 +416,14 @@ class WorldExplorer {
         document.addEventListener('keydown', (e) => {
             this.keys[e.key.toLowerCase()] = true;
             
+            // Prevent default for game controls to avoid page scrolling
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'w', 'a', 's', 'd'].includes(e.key)) {
+                e.preventDefault();
+            }
+            
             // Handle special keys
             if (e.key === ' ') {
                 this.investigateCurrentArea();
-                e.preventDefault();
             }
         });
         
