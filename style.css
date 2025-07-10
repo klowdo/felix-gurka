@@ -185,7 +185,7 @@ footer {
 }
 
 #cucumber-player.jumping {
-    animation: jump 0.6s ease;
+    animation: jump 0.8s ease;
 }
 
 @keyframes jump {

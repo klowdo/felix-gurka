@@ -59,7 +59,7 @@ class CucumberGame {
 
         this.isGameRunning = true;
         this.score = 0;
-        this.gameSpeed = 2;
+        this.gameSpeed = 4;
         this.obstacles = [];
         this.updateScore();
 
@@ -78,7 +78,7 @@ class CucumberGame {
         setTimeout(() => {
             this.player.classList.remove('jumping');
             this.isJumping = false;
-        }, 600);
+        }, 800);
     }
 
     createObstacle() {
@@ -86,7 +86,7 @@ class CucumberGame {
 
         const obstacle = document.createElement('div');
         obstacle.className = 'obstacle';
-        obstacle.textContent = '🧅'; // Using onion as obstacle
+        obstacle.textContent = '🍑'; // Using peach as obstacle
         obstacle.style.right = '-50px';
         this.gameArea.appendChild(obstacle);
         this.obstacles.push(obstacle);
