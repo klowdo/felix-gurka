@@ -59,7 +59,7 @@ class CucumberGame {
 
         this.isGameRunning = true;
         this.score = 0;
-        this.gameSpeed = 4;
+        this.gameSpeed = 5;
         this.obstacles = [];
         this.updateScore();
 
@@ -88,7 +88,7 @@ class CucumberGame {
         const lastObstacle = this.obstacles[this.obstacles.length - 1];
         if (lastObstacle) {
             const lastObstaclePosition = parseInt(lastObstacle.style.right) || 0;
-            const minDistance = 300; // Minimum pixels between obstacles
+            const minDistance = 250; // Reduced minimum pixels between obstacles
             if (lastObstaclePosition < minDistance) {
                 setTimeout(() => this.createObstacle(), 200);
                 return;
@@ -102,9 +102,9 @@ class CucumberGame {
         this.gameArea.appendChild(obstacle);
         this.obstacles.push(obstacle);
 
-        const baseDelay = 1500; // Minimum safe distance
-        const variableDelay = Math.random() * 2000; // 0-2000ms additional
-        const scoreSpeedAdjustment = Math.max(0, 500 - (this.score * 2)); // Reduce delay as score increases
+        const baseDelay = 1200; // Reduced minimum safe distance
+        const variableDelay = Math.random() * 1500; // 0-1500ms additional (was 2000ms)
+        const scoreSpeedAdjustment = Math.max(0, 400 - (this.score * 3)); // Faster reduction with score
         const nextObstacleDelay = baseDelay + variableDelay + scoreSpeedAdjustment;
         setTimeout(() => this.createObstacle(), nextObstacleDelay);
     }
@@ -123,8 +123,8 @@ class CucumberGame {
                 this.score += 10;
                 this.updateScore();
 
-                if (this.score % 50 === 0) {
-                    this.gameSpeed += 0.3;
+                if (this.score % 30 === 0) {
+                    this.gameSpeed += 0.4;
                 }
             }
 
