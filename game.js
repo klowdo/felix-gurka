@@ -44,7 +44,6 @@ class CucumberGame {
 
     startGame() {
         console.log('Starting game...');
-        document.querySelector('header').style.display = 'none';
         document.querySelector('main').style.display = 'none';
         document.querySelector('footer').style.display = 'none';
         this.gameContainer.classList.remove('game-hidden');
@@ -150,7 +149,6 @@ class CucumberGame {
 
     backToHome() {
         this.gameContainer.classList.add('game-hidden');
-        document.querySelector('header').style.display = 'block';
         document.querySelector('main').style.display = 'block';
         document.querySelector('footer').style.display = 'block';
 
