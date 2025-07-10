@@ -1,0 +1,197 @@
+{
+  "id": "forest",
+  "name": "Mysterious Forest",
+  "description": "A dense forest filled with exotic fruits and challenging cucumber trainers. Shadows dance between ancient trees.",
+  "unlockRequirement": "defeat_garden_keeper",
+  "backgroundTheme": "mysterious",
+  "music": "forest_theme",
+  "areas": [
+    {
+      "id": "forest_entrance",
+      "name": "Forest Entrance",
+      "description": "The edge of the forest where sunlight still filters through the canopy.",
+      "fruits": [
+        {
+          "id": "apple_001",
+          "rarity": "common",
+          "level": [3, 5],
+          "encounterRate": 0.3
+        },
+        {
+          "id": "banana_001",
+          "rarity": "common",
+          "level": [3, 4],
+          "encounterRate": 0.25
+        }
+      ],
+      "encounterRate": 0.2
+    },
+    {
+      "id": "deep_woods",
+      "name": "Deep Woods",
+      "description": "The heart of the forest where rare fruits hide in the shadows.",
+      "fruits": [
+        {
+          "id": "banana_001",
+          "rarity": "common",
+          "level": [4, 6],
+          "encounterRate": 0.4
+        },
+        {
+          "id": "orange_001",
+          "rarity": "uncommon",
+          "level": [4, 5],
+          "encounterRate": 0.2
+        }
+      ],
+      "encounterRate": 0.35
+    },
+    {
+      "id": "ancient_grove",
+      "name": "Ancient Grove",
+      "description": "A sacred grove where the oldest and strongest fruits dwell.",
+      "fruits": [
+        {
+          "id": "apple_001",
+          "rarity": "uncommon",
+          "level": [5, 7],
+          "encounterRate": 0.15
+        },
+        {
+          "id": "banana_001",
+          "rarity": "rare",
+          "level": [6, 8],
+          "encounterRate": 0.1
+        }
+      ],
+      "encounterRate": 0.4
+    }
+  ],
+  "wildCucumbers": [
+    {
+      "id": "forest_ranger",
+      "name": "Forest Ranger Jake",
+      "description": "A ranger who protects the forest and its fruit inhabitants.",
+      "level": [4, 6],
+      "team": [
+        {
+          "fruitId": "banana_001",
+          "level": 5,
+          "nickname": "Lightning"
+        },
+        {
+          "fruitId": "apple_001",
+          "level": 4,
+          "nickname": "Shield"
+        }
+      ],
+      "encounterRate": 0.06,
+      "dialogue": {
+        "challenge": "This forest is under my protection. Prove you're worthy to explore here!",
+        "victory": "You've earned the right to explore these woods. Go forth with respect.",
+        "defeat": "The forest spirits guide my fruits to victory!"
+      },
+      "reward": {
+        "experience": 75,
+        "coins": 50,
+        "items": ["super_potion"]
+      }
+    },
+    {
+      "id": "wandering_trainer",
+      "name": "Wandering Trainer Alex",
+      "description": "A mysterious trainer who travels between worlds.",
+      "level": [5, 7],
+      "team": [
+        {
+          "fruitId": "orange_001",
+          "level": 6,
+          "nickname": "Blaze"
+        },
+        {
+          "fruitId": "banana_001",
+          "level": 5,
+          "nickname": "Spark"
+        },
+        {
+          "fruitId": "apple_001",
+          "level": 5,
+          "nickname": "Sage"
+        }
+      ],
+      "encounterRate": 0.03,
+      "dialogue": {
+        "challenge": "I've traveled many worlds seeking strong opponents. Will you test your skills?",
+        "victory": "Impressive! You have the makings of a true champion.",
+        "defeat": "Experience from many worlds guides my strategy!"
+      },
+      "reward": {
+        "experience": 120,
+        "coins": 100,
+        "items": ["rare_fruit_seed"]
+      }
+    },
+    {
+      "id": "forest_guardian",
+      "name": "Ancient Forest Guardian",
+      "description": "The legendary guardian of the forest's deepest secrets.",
+      "level": [8, 10],
+      "team": [
+        {
+          "fruitId": "banana_001",
+          "level": 9,
+          "nickname": "Storm"
+        },
+        {
+          "fruitId": "apple_001",
+          "level": 8,
+          "nickname": "Ancient"
+        },
+        {
+          "fruitId": "orange_001",
+          "level": 8,
+          "nickname": "Eternal"
+        }
+      ],
+      "encounterRate": 0.01,
+      "dialogue": {
+        "challenge": "So... you seek to challenge the ancient power of this forest...",
+        "victory": "You have proven yourself worthy. The forest accepts you as its friend.",
+        "defeat": "The ancient power flows through my fruits. Return when you are stronger."
+      },
+      "reward": {
+        "experience": 200,
+        "coins": 200,
+        "items": ["forest_badge", "master_ball"]
+      }
+    }
+  ],
+  "items": [
+    {
+      "id": "super_potion",
+      "name": "Forest Super Potion",
+      "description": "A powerful healing potion infused with forest magic.",
+      "findRate": 0.03,
+      "locations": ["deep_woods", "ancient_grove"]
+    },
+    {
+      "id": "rare_fruit_seed",
+      "name": "Rare Fruit Seed",
+      "description": "A mysterious seed that might grow into something special.",
+      "findRate": 0.01,
+      "locations": ["ancient_grove"]
+    }
+  ],
+  "connections": [
+    {
+      "to": "garden",
+      "requirement": null,
+      "description": "The path back to the peaceful garden."
+    },
+    {
+      "to": "mountain",
+      "requirement": "defeat_forest_guardian",
+      "description": "A treacherous mountain path for the truly experienced."
+    }
+  ]
+}

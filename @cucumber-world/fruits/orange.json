@@ -1,0 +1,59 @@
+{
+  "id": "orange_001",
+  "name": "Orange",
+  "type": "fire",
+  "description": "A citrusy fruit bursting with vitamin C and fiery energy. Known for its balanced stats and versatile move set.",
+  "rarity": "common",
+  "emoji": "🍊",
+  "baseStats": {
+    "health": 40,
+    "attack": 20,
+    "defense": 15,
+    "speed": 15,
+    "special": 20
+  },
+  "attacks": [
+    {
+      "id": "citrus_blast",
+      "name": "Citrus Blast",
+      "damage": 28,
+      "accuracy": 85,
+      "type": "fire",
+      "pp": 20,
+      "description": "Shoots acidic citrus juice that burns the opponent."
+    },
+    {
+      "id": "vitamin_c_boost",
+      "name": "Vitamin C Boost",
+      "type": "heal",
+      "heal": 20,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "Restores health and boosts immune system."
+    },
+    {
+      "id": "juice_spray",
+      "name": "Juice Spray",
+      "damage": 15,
+      "accuracy": 95,
+      "type": "water",
+      "pp": 25,
+      "description": "Sprays sticky juice that can lower speed."
+    },
+    {
+      "id": "solar_charge",
+      "name": "Solar Charge",
+      "type": "support",
+      "effect": "boost_special",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "Absorbs sunlight to increase special attack power."
+    }
+  ],
+  "habitat": ["garden", "grove"],
+  "evolutionLevel": null,
+  "evolvesTo": null,
+  "catchRate": 70,
+  "expYield": 20,
+  "growthRate": "medium"
+}

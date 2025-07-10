@@ -1,0 +1,59 @@
+{
+  "id": "apple_001",
+  "name": "Apple",
+  "type": "grass",
+  "description": "A crisp, healthy fruit with natural healing properties. Known for its defensive capabilities and supportive moves.",
+  "rarity": "common",
+  "emoji": "🍎",
+  "baseStats": {
+    "health": 45,
+    "attack": 15,
+    "defense": 18,
+    "speed": 8,
+    "special": 12
+  },
+  "attacks": [
+    {
+      "id": "apple_toss",
+      "name": "Apple Toss",
+      "damage": 20,
+      "accuracy": 90,
+      "type": "normal",
+      "pp": 25,
+      "description": "Throws a fresh apple at the opponent with decent accuracy."
+    },
+    {
+      "id": "vitamin_boost",
+      "name": "Vitamin Boost",
+      "type": "heal",
+      "heal": 25,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "Restores health using natural vitamins and minerals."
+    },
+    {
+      "id": "sweet_scent",
+      "name": "Sweet Scent",
+      "type": "support",
+      "effect": "lower_accuracy",
+      "accuracy": 85,
+      "pp": 15,
+      "description": "Releases a sweet aroma that distracts the opponent."
+    },
+    {
+      "id": "crunch",
+      "name": "Crunch",
+      "damage": 30,
+      "accuracy": 85,
+      "type": "normal",
+      "pp": 15,
+      "description": "A powerful bite attack that can lower defense."
+    }
+  ],
+  "habitat": ["garden", "forest"],
+  "evolutionLevel": null,
+  "evolvesTo": null,
+  "catchRate": 80,
+  "expYield": 15,
+  "growthRate": "medium"
+}

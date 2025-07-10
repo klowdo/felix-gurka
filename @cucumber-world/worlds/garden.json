@@ -1,0 +1,134 @@
+{
+  "id": "garden",
+  "name": "Peaceful Garden",
+  "description": "A serene garden where common fruits grow abundantly. This is where most cucumber trainers begin their journey.",
+  "unlockRequirement": null,
+  "backgroundTheme": "peaceful",
+  "music": "garden_theme",
+  "areas": [
+    {
+      "id": "vegetable_patch",
+      "name": "Vegetable Patch",
+      "description": "A well-tended area where vegetables and common fruits grow side by side.",
+      "fruits": [
+        {
+          "id": "apple_001",
+          "rarity": "common",
+          "level": [1, 3],
+          "encounterRate": 0.4
+        },
+        {
+          "id": "orange_001", 
+          "rarity": "common",
+          "level": [1, 2],
+          "encounterRate": 0.3
+        }
+      ],
+      "encounterRate": 0.25
+    },
+    {
+      "id": "fruit_trees",
+      "name": "Fruit Tree Grove",
+      "description": "Ancient fruit trees that have been growing here for decades.",
+      "fruits": [
+        {
+          "id": "apple_001",
+          "rarity": "common",
+          "level": [2, 4],
+          "encounterRate": 0.35
+        },
+        {
+          "id": "banana_001",
+          "rarity": "uncommon", 
+          "level": [2, 3],
+          "encounterRate": 0.2
+        }
+      ],
+      "encounterRate": 0.3
+    },
+    {
+      "id": "flower_meadow",
+      "name": "Flower Meadow",
+      "description": "A colorful meadow where rare fruits occasionally appear among the flowers.",
+      "fruits": [
+        {
+          "id": "orange_001",
+          "rarity": "common",
+          "level": [2, 5],
+          "encounterRate": 0.25
+        }
+      ],
+      "encounterRate": 0.15
+    }
+  ],
+  "wildCucumbers": [
+    {
+      "id": "novice_cucumber",
+      "name": "Novice Cucumber", 
+      "description": "A young cucumber trainer just starting their journey.",
+      "level": [1, 3],
+      "team": [
+        {
+          "fruitId": "apple_001",
+          "level": 2,
+          "nickname": "Crunchy"
+        }
+      ],
+      "encounterRate": 0.08,
+      "dialogue": {
+        "challenge": "Hey! I just started my fruit collection journey. Want to battle?",
+        "victory": "Wow, you're really good! I need to train more.",
+        "defeat": "Yes! My first victory! Thanks for the battle!"
+      },
+      "reward": {
+        "experience": 25,
+        "coins": 15
+      }
+    },
+    {
+      "id": "garden_keeper",
+      "name": "Garden Keeper Sam",
+      "description": "An experienced gardener who tends to this beautiful garden.",
+      "level": [3, 5],
+      "team": [
+        {
+          "fruitId": "apple_001",
+          "level": 4,
+          "nickname": "Guardian"
+        },
+        {
+          "fruitId": "orange_001",
+          "level": 3,
+          "nickname": "Sunny"
+        }
+      ],
+      "encounterRate": 0.05,
+      "dialogue": {
+        "challenge": "Welcome to my garden! Let me show you how we grow strong fruits here.",
+        "victory": "Excellent! You have the potential to become a great fruit trainer.",
+        "defeat": "The power of nature never fails! Keep practicing, young one."
+      },
+      "reward": {
+        "experience": 50,
+        "coins": 30,
+        "items": ["potion"]
+      }
+    }
+  ],
+  "items": [
+    {
+      "id": "potion",
+      "name": "Garden Potion",
+      "description": "A healing potion made from garden herbs.",
+      "findRate": 0.05,
+      "locations": ["flower_meadow", "vegetable_patch"]
+    }
+  ],
+  "connections": [
+    {
+      "to": "forest",
+      "requirement": "defeat_garden_keeper",
+      "description": "A path through the trees leads to a mysterious forest."
+    }
+  ]
+}

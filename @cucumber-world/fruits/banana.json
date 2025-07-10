@@ -1,0 +1,60 @@
+{
+  "id": "banana_001",
+  "name": "Banana",
+  "type": "electric",
+  "description": "A potassium-rich fruit with electrical properties. Fast and agile, known for slippery tactics and quick strikes.",
+  "rarity": "common",
+  "emoji": "🍌",
+  "baseStats": {
+    "health": 35,
+    "attack": 22,
+    "defense": 10,
+    "speed": 25,
+    "special": 18
+  },
+  "attacks": [
+    {
+      "id": "banana_peel",
+      "name": "Banana Peel",
+      "type": "support",
+      "effect": "lower_speed",
+      "accuracy": 90,
+      "pp": 20,
+      "description": "Drops a slippery peel that slows down the opponent."
+    },
+    {
+      "id": "potassium_shock",
+      "name": "Potassium Shock",
+      "damage": 25,
+      "accuracy": 85,
+      "type": "electric",
+      "pp": 20,
+      "description": "Releases electrical energy from natural potassium."
+    },
+    {
+      "id": "quick_strike",
+      "name": "Quick Strike",
+      "damage": 18,
+      "accuracy": 95,
+      "type": "normal",
+      "priority": 1,
+      "pp": 30,
+      "description": "A fast attack that usually goes first."
+    },
+    {
+      "id": "energy_burst",
+      "name": "Energy Burst",
+      "damage": 35,
+      "accuracy": 75,
+      "type": "electric",
+      "pp": 10,
+      "description": "A powerful electrical attack with reduced accuracy."
+    }
+  ],
+  "habitat": ["jungle", "garden"],
+  "evolutionLevel": null,
+  "evolvesTo": null,
+  "catchRate": 75,
+  "expYield": 18,
+  "growthRate": "fast"
+}
