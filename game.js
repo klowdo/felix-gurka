@@ -21,7 +21,10 @@ class CucumberGame {
     }
     
     init() {
-        this.mainCucumber.addEventListener('click', () => this.startGame());
+        this.mainCucumber.addEventListener('click', () => {
+            console.log('Main cucumber clicked!');
+            this.startGame();
+        });
         this.restartBtn.addEventListener('click', () => this.restartGame());
         this.backBtn.addEventListener('click', () => this.backToHome());
         
@@ -40,9 +43,12 @@ class CucumberGame {
     }
     
     startGame() {
+        console.log('Starting game...');
+        document.querySelector('header').style.display = 'none';
         document.querySelector('main').style.display = 'none';
         document.querySelector('footer').style.display = 'none';
         this.gameContainer.classList.remove('game-hidden');
+        this.gameContainer.style.display = 'block';
         this.gameOverScreen.classList.add('game-hidden');
         
         this.isGameRunning = true;
@@ -54,6 +60,7 @@ class CucumberGame {
         this.gameLoop = setInterval(() => this.update(), 20);
         
         setTimeout(() => this.createObstacle(), 2000);
+        console.log('Game started successfully');
     }
     
     jump() {
@@ -137,6 +144,7 @@ class CucumberGame {
     
     backToHome() {
         this.gameContainer.classList.add('game-hidden');
+        document.querySelector('header').style.display = 'block';
         document.querySelector('main').style.display = 'block';
         document.querySelector('footer').style.display = 'block';
         
