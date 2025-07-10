@@ -101,13 +101,19 @@ class CucumberWorldInit {
             </div>
         `;
 
-        // Initialize the game
-        this.game = new CucumberWorld('cucumber-world-container');
+        // Wait for DOM elements to be created
+        await new Promise(resolve => setTimeout(resolve, 100));
         
         // Add close button handler
-        document.getElementById('cw-close-btn').addEventListener('click', () => {
-            this.closeGame();
-        });
+        const closeButton = document.getElementById('cw-close-btn');
+        if (closeButton) {
+            closeButton.addEventListener('click', () => {
+                this.closeGame();
+            });
+        }
+
+        // Initialize the game
+        this.game = new CucumberWorld('cucumber-world-container');
 
         // Wait a moment for initialization
         await new Promise(resolve => setTimeout(resolve, 1000));

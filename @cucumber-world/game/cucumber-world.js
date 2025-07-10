@@ -76,6 +76,14 @@ class CucumberWorld {
             throw new Error(`Container element '${this.containerId}' not found`);
         }
 
+        // Check if the game content already exists (from rpg-init.js)
+        const existingGame = this.container.querySelector('.cucumber-world-game');
+        if (existingGame) {
+            console.log('Using existing game container');
+            return;
+        }
+
+        // Create new game container if it doesn't exist
         this.container.innerHTML = `
             <div class="cucumber-world-game">
                 <div class="game-header">
@@ -152,14 +160,20 @@ class CucumberWorld {
      */
     setupEventHandlers() {
         // Menu button
-        document.getElementById('cw-menu-btn').addEventListener('click', () => {
-            this.showMainMenu();
-        });
+        const menuBtn = document.getElementById('cw-menu-btn');
+        if (menuBtn) {
+            menuBtn.addEventListener('click', () => {
+                this.showMainMenu();
+            });
+        }
 
         // Save button
-        document.getElementById('cw-save-btn').addEventListener('click', () => {
-            this.quickSave();
-        });
+        const saveBtn = document.getElementById('cw-save-btn');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => {
+                this.quickSave();
+            });
+        }
 
         // Canvas click events
         this.canvas.addEventListener('click', (e) => {
