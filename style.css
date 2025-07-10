@@ -50,6 +50,14 @@ main {
     font-size: 8rem;
     animation: bounce 2s infinite;
     display: inline-block;
+    cursor: pointer;
+}
+
+.click-instruction {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: #4a7c59;
+    font-style: italic;
 }
 
 @keyframes bounce {
@@ -131,6 +139,120 @@ footer {
     margin-top: 3rem;
 }
 
+/* Game Styles */
+.game-hidden {
+    display: none !important;
+}
+
+#game-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 70%, #8FBC8F 70%, #8FBC8F 100%);
+    z-index: 1000;
+}
+
+#game-area {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#score {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2d5016;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#cucumber-player {
+    position: absolute;
+    bottom: 100px;
+    left: 50px;
+    font-size: 3rem;
+    transition: bottom 0.1s ease;
+    z-index: 10;
+}
+
+#cucumber-player.jumping {
+    animation: jump 0.6s ease;
+}
+
+@keyframes jump {
+    0% { bottom: 100px; }
+    50% { bottom: 200px; }
+    100% { bottom: 100px; }
+}
+
+#ground {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+    background: #8FBC8F;
+    border-top: 3px solid #6B8E6B;
+}
+
+.obstacle {
+    position: absolute;
+    bottom: 100px;
+    font-size: 2.5rem;
+    z-index: 5;
+    animation: moveLeft linear;
+}
+
+#game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    z-index: 20;
+}
+
+#game-over h2 {
+    color: #d32f2f;
+    margin-bottom: 1rem;
+    border: none;
+}
+
+#game-over button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+}
+
+#game-over button:hover {
+    background: #45a049;
+}
+
+#back-btn {
+    background: #f44336 !important;
+}
+
+#back-btn:hover {
+    background: #da190b !important;
+}
+
 @media (max-width: 768px) {
     header h1 {
         font-size: 2rem;
@@ -150,5 +272,25 @@ footer {
     
     .big-cucumber {
         font-size: 3rem;
+    }
+    
+    #cucumber-player {
+        font-size: 2.5rem;
+        left: 30px;
+    }
+    
+    #score {
+        font-size: 1.2rem;
+        padding: 8px 15px;
+    }
+    
+    .obstacle {
+        font-size: 2rem;
+    }
+    
+    #game-over {
+        padding: 1.5rem;
+        width: 90%;
+        max-width: 400px;
     }
 }
