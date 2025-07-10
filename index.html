@@ -5,7 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Felix Gurka</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="@cucumber-world/cucumber-world.css">
     <script src="game.js" defer></script>
+    <!-- Cucumber World RPG Scripts -->
+    <script src="@cucumber-world/game/fruit-loader.js" defer></script>
+    <script src="@cucumber-world/game/save-manager.js" defer></script>
+    <script src="@cucumber-world/game/world-explorer.js" defer></script>
+    <script src="@cucumber-world/game/cucumber-world.js" defer></script>
+    <script src="@cucumber-world/rpg-init.js" defer></script>
 </head>
 <body>
     <header>
@@ -46,7 +53,43 @@
                 <span class="big-cucumber">🥒</span>
             </div>
         </section>
+
+        <!-- Cucumber World RPG Section -->
+        <section class="rpg-intro">
+            <h2>🥒 Cucumber World RPG 🍎</h2>
+            <p>Join Felix on an epic adventure! Explore magical worlds, collect powerful fruits, and battle other cucumber trainers in this Pokemon-inspired RPG.</p>
+            
+            <div class="rpg-features">
+                <div class="feature-card">
+                    <span class="emoji">🌍</span>
+                    <h3>Explore Worlds</h3>
+                    <p>Discover the Peaceful Garden, Mysterious Forest, and more exciting locations!</p>
+                </div>
+                <div class="feature-card">
+                    <span class="emoji">🍎</span>
+                    <h3>Collect Fruits</h3>
+                    <p>Find and catch powerful fruits like Apple, Banana, and Orange with unique abilities.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="emoji">⚔️</span>
+                    <h3>Battle System</h3>
+                    <p>Engage in turn-based combat with wild fruits and other cucumber trainers.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="emoji">💾</span>
+                    <h3>Save Progress</h3>
+                    <p>Multiple save slots to track your journey and fruit collection progress.</p>
+                </div>
+            </div>
+            
+            <button id="start-rpg-btn" class="start-game-btn">🎮 Start Adventure</button>
+        </section>
     </main>
+
+    <!-- Cucumber World RPG Game Container -->
+    <div id="cucumber-world-container" class="cucumber-world-container" style="display: none;">
+        <!-- Game will be initialized here -->
+    </div>
 
     <!-- Game Container moved outside main -->
     <div id="game-container" class="game-hidden">

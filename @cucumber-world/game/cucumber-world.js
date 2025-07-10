@@ -492,8 +492,10 @@ class CucumberWorld {
      * Load world explorer system
      */
     async loadWorldExplorer() {
-        // This will be implemented when world-explorer.js is created
-        console.log('World explorer would be loaded here');
+        // Initialize the world explorer
+        this.worldExplorer = new WorldExplorer(this, this.fruitLoader);
+        await this.worldExplorer.init(this.currentSave.currentWorld, this.currentSave.currentArea || 'vegetable_patch');
+        console.log('World explorer loaded successfully');
     }
 
     /**
