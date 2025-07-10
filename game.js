@@ -91,7 +91,7 @@ class CucumberGame {
         this.gameArea.appendChild(obstacle);
         this.obstacles.push(obstacle);
 
-        const nextObstacleDelay = Math.random() * 2000 + 1500;
+        const nextObstacleDelay = Math.random() * 3000 + 800;
         setTimeout(() => this.createObstacle(), nextObstacleDelay);
     }
 
@@ -100,7 +100,8 @@ class CucumberGame {
 
         this.obstacles.forEach((obstacle, index) => {
             const currentRight = parseInt(obstacle.style.right) || 0;
-            obstacle.style.right = (currentRight + this.gameSpeed) + 'px';
+            const dynamicSpeed = this.gameSpeed + (this.score * 0.01);
+            obstacle.style.right = (currentRight + dynamicSpeed) + 'px';
 
             if (currentRight > window.innerWidth + 50) {
                 obstacle.remove();
@@ -108,8 +109,8 @@ class CucumberGame {
                 this.score += 10;
                 this.updateScore();
 
-                if (this.score % 100 === 0) {
-                    this.gameSpeed += 0.5;
+                if (this.score % 50 === 0) {
+                    this.gameSpeed += 0.3;
                 }
             }
 
