@@ -161,6 +161,12 @@ npm run dev          # Start development server
 git add . && git commit -m "message"  # Commit changes
 ```
 
+## Development Workflow - IMPORTANT
+**ALWAYS commit changes when implementing new features or fixing bugs:**
+1. After completing any significant work, run: `git add . && git commit -m "descriptive message"`
+2. Use meaningful commit messages that describe what was implemented
+3. Commit frequently to track progress and enable rollbacks if needed
+
 ## Testing the Current System
 1. Start a new game in the RPG
 2. Walk around on grass tiles (green 🌱)  

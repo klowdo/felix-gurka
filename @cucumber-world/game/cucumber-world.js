@@ -27,6 +27,8 @@ class CucumberWorld {
         
         // Battle system
         this.currentBattle = null;
+        this.battleInput = null;
+        this.battleUI = null;
         
         // UI state
         this.selectedSaveSlot = 1;
@@ -232,6 +234,8 @@ class CucumberWorld {
             case 'battle':
                 if (this.battleSystem) {
                     this.battleSystem.update(timestamp);
+                } else if (this.battleUI) {
+                    this.battleUI.update(timestamp);
                 }
                 break;
         }
@@ -373,8 +377,11 @@ class CucumberWorld {
     renderBattleView() {
         if (this.battleSystem) {
             this.battleSystem.render(this.ctx);
+        } else if (this.currentBattle && this.battleUI) {
+            // Render interactive battle screen
+            this.battleUI.render(this.ctx, this.currentBattle, this.battleInput, this);
         } else if (this.currentBattle) {
-            // Render simple battle screen
+            // Fallback to simple battle screen
             this.renderSimpleBattle(this.ctx);
         } else {
             // Placeholder battle view
@@ -920,20 +927,30 @@ class CucumberWorld {
         // Store battle data
         this.currentBattle = battleData;
         
+        // Initialize battle input and UI systems
+        if (!this.battleInput) {
+            this.battleInput = new BattleInput();
+            
+            // Set up battle action callbacks
+            this.battleInput.setCallbacks({
+                onActionSelected: (action) => this.handleBattleAction(action),
+                onMoveSelected: (moveIndex) => this.handleMoveSelection(moveIndex),
+                onItemSelected: (itemIndex) => this.handleItemSelection(itemIndex),
+                onMenuBack: () => this.handleMenuBack()
+            });
+        }
+        
+        if (!this.battleUI) {
+            this.battleUI = new BattleUI();
+        }
+        
+        // Reset battle input to main menu
+        this.battleInput.resetToMainMenu();
+        
         // Change to battle state
         this.gameState = 'battle';
         
-        // For now, show a placeholder battle screen
-        console.log('Battle started! (Battle system not yet implemented)');
-        
-        // Auto-end battle after 3 seconds for testing
-        setTimeout(() => {
-            this.endBattle({
-                victory: true,
-                expGained: 25,
-                levelUp: false
-            });
-        }, 3000);
+        console.log('Interactive battle started!');
     }
 
     /**
@@ -965,6 +982,177 @@ class CucumberWorld {
     showError(message) {
         console.error(message);
         alert(message); // Temporary - would use proper error UI
+    }
+
+    /**
+     * Handle battle actions
+     */
+    handleBattleAction(action) {
+        console.log('Battle action selected:', action);
+        
+        switch (action) {
+            case 'defend':
+                this.executeBattleDefend();
+                break;
+            case 'run':
+                this.executeBattleRun();
+                break;
+        }
+    }
+    
+    /**
+     * Handle move selection
+     */
+    handleMoveSelection(moveIndex) {
+        console.log('Move selected:', moveIndex);
+        
+        if (this.currentBattle && this.currentBattle.playerFruit) {
+            const playerMoves = this.currentBattle.playerFruit.moves;
+            const selectedMove = playerMoves[moveIndex];
+            
+            if (selectedMove) {
+                this.executeBattleAttack(selectedMove);
+            }
+        }
+    }
+    
+    /**
+     * Handle item selection
+     */
+    handleItemSelection(itemIndex) {
+        console.log('Item selected:', itemIndex);
+        // Placeholder for item usage
+        this.showMessage('Items coming soon!');
+    }
+    
+    /**
+     * Handle menu back navigation
+     */
+    handleMenuBack() {
+        console.log('Back to main battle menu');
+    }
+    
+    /**
+     * Execute attack move
+     */
+    executeBattleAttack(move) {
+        if (!this.currentBattle) return;
+        
+        const attacker = this.currentBattle.playerFruit;
+        const defender = this.currentBattle.enemyFruit;
+        
+        // Calculate damage (simplified for now)
+        const damage = Math.floor(Math.random() * 20) + 10;
+        defender.hp = Math.max(0, defender.hp - damage);
+        
+        // Update battle message
+        this.currentBattle.currentMessage = `${attacker.name} used ${move}! Dealt ${damage} damage!`;
+        
+        console.log(`${attacker.name} used ${move} for ${damage} damage!`);
+        
+        // Check if enemy is defeated
+        if (defender.hp <= 0) {
+            setTimeout(() => {
+                this.endBattle({
+                    victory: true,
+                    expGained: 25,
+                    levelUp: false
+                });
+            }, 2000);
+        } else {
+            // Enemy counter-attack after delay
+            setTimeout(() => {
+                this.executeEnemyTurn();
+            }, 2000);
+        }
+    }
+    
+    /**
+     * Execute defend action
+     */
+    executeBattleDefend() {
+        if (!this.currentBattle) return;
+        
+        const player = this.currentBattle.playerFruit;
+        
+        // Small heal when defending
+        const healAmount = Math.floor(player.maxHP * 0.1);
+        player.hp = Math.min(player.maxHP, player.hp + healAmount);
+        
+        this.currentBattle.currentMessage = `${player.name} defends and recovers ${healAmount} HP!`;
+        
+        console.log(`${player.name} defended and healed ${healAmount} HP`);
+        
+        // Enemy turn after delay
+        setTimeout(() => {
+            this.executeEnemyTurn();
+        }, 2000);
+    }
+    
+    /**
+     * Execute run action
+     */
+    executeBattleRun() {
+        if (!this.currentBattle) return;
+        
+        // 75% chance to escape from wild battles
+        const escapeChance = 0.75;
+        
+        if (Math.random() < escapeChance) {
+            this.currentBattle.currentMessage = "Successfully ran away!";
+            
+            setTimeout(() => {
+                this.endBattle({
+                    victory: false,
+                    escaped: true,
+                    expGained: 0,
+                    levelUp: false
+                });
+            }, 1500);
+        } else {
+            this.currentBattle.currentMessage = "Couldn't escape!";
+            
+            setTimeout(() => {
+                this.executeEnemyTurn();
+            }, 2000);
+        }
+    }
+    
+    /**
+     * Execute enemy turn
+     */
+    executeEnemyTurn() {
+        if (!this.currentBattle) return;
+        
+        const attacker = this.currentBattle.enemyFruit;
+        const defender = this.currentBattle.playerFruit;
+        
+        // Simple AI: always attack with first move
+        const enemyMove = attacker.moves[0] || 'Tackle';
+        const damage = Math.floor(Math.random() * 15) + 5;
+        
+        defender.hp = Math.max(0, defender.hp - damage);
+        
+        this.currentBattle.currentMessage = `Wild ${attacker.name} used ${enemyMove}! Dealt ${damage} damage!`;
+        
+        console.log(`Enemy ${attacker.name} used ${enemyMove} for ${damage} damage!`);
+        
+        // Check if player is defeated
+        if (defender.hp <= 0) {
+            setTimeout(() => {
+                this.endBattle({
+                    victory: false,
+                    expGained: 0,
+                    levelUp: false
+                });
+            }, 2000);
+        } else {
+            // Reset to player turn
+            setTimeout(() => {
+                this.currentBattle.currentMessage = "What will Cucumber do?";
+                this.battleInput.resetToMainMenu();
+            }, 2000);
+        }
     }
 
     /**
