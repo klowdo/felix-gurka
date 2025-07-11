@@ -331,14 +331,18 @@ class GridWorldExplorer {
     handleEncounter(encounterData) {
         console.log('Encounter triggered:', encounterData);
         
-        // Create encounter popup based on type
+        // Pause grid input during encounter
+        this.keys = {}; // Clear any held keys
+        
+        // Generate wild fruit data
+        const wildFruit = this.generateWildFruit(encounterData);
+        
+        // Create encounter popup first
         let message = '';
         let encounterType = 'wild_fruit';
         
         if (encounterData.type === 'wild_fruit') {
-            const fruits = ['Apple', 'Orange', 'Banana', 'Berry'];
-            const randomFruit = fruits[Math.floor(Math.random() * fruits.length)];
-            message = `A wild ${randomFruit} appeared!`;
+            message = `A wild ${wildFruit.name} appeared!`;
             encounterType = 'fruit';
         } else if (encounterData.type === 'trainer') {
             message = 'A cucumber trainer wants to battle!';
@@ -349,8 +353,197 @@ class GridWorldExplorer {
             type: encounterType,
             message: message,
             data: encounterData,
+            wildFruit: wildFruit,
+            timestamp: Date.now(),
+            waitingForBattle: true
+        };
+        
+        // Auto-start battle after short delay (like Pokemon)
+        setTimeout(() => {
+            this.startBattle(wildFruit, encounterType);
+        }, 2000);
+    }
+
+    /**
+     * Generate wild fruit based on encounter data
+     */
+    generateWildFruit(encounterData) {
+        const fruits = ['Apple', 'Orange', 'Banana', 'Berry'];
+        const randomFruit = fruits[Math.floor(Math.random() * fruits.length)];
+        
+        // Generate level based on area (1-5 for now)
+        const level = Math.floor(Math.random() * 3) + 1; // Level 1-3
+        
+        return {
+            name: randomFruit,
+            species: randomFruit.toLowerCase(),
+            level: level,
+            hp: this.calculateHP(randomFruit, level),
+            maxHP: this.calculateHP(randomFruit, level),
+            stats: this.calculateStats(randomFruit, level),
+            moves: this.getMovesForFruit(randomFruit, level),
+            type: this.getFruitType(randomFruit)
+        };
+    }
+
+    /**
+     * Calculate HP for a fruit at given level
+     */
+    calculateHP(species, level) {
+        const baseHP = {
+            'Apple': 45,
+            'Orange': 40, 
+            'Banana': 35,
+            'Berry': 50
+        };
+        return baseHP[species] + (level * 3);
+    }
+
+    /**
+     * Calculate all stats for a fruit
+     */
+    calculateStats(species, level) {
+        const baseStats = {
+            'Apple': { attack: 15, defense: 18, speed: 12 },
+            'Orange': { attack: 18, defense: 12, speed: 15 },
+            'Banana': { attack: 12, defense: 15, speed: 20 },
+            'Berry': { attack: 20, defense: 20, speed: 8 }
+        };
+        
+        const base = baseStats[species];
+        return {
+            attack: base.attack + Math.floor(level * 2),
+            defense: base.defense + Math.floor(level * 1.5),
+            speed: base.speed + Math.floor(level * 1)
+        };
+    }
+
+    /**
+     * Get moves for a fruit based on level
+     */
+    getMovesForFruit(species, level) {
+        const moveSets = {
+            'Apple': ['Apple Toss', 'Sweet Scent'],
+            'Orange': ['Citrus Blast', 'Vitamin Boost'],
+            'Banana': ['Slip Trap', 'Potassium Power'],
+            'Berry': ['Berry Burst', 'Heal Pulse']
+        };
+        
+        return moveSets[species] || ['Tackle'];
+    }
+
+    /**
+     * Get type for a fruit
+     */
+    getFruitType(species) {
+        const types = {
+            'Apple': 'grass',
+            'Orange': 'fire',
+            'Banana': 'electric', 
+            'Berry': 'normal'
+        };
+        return types[species] || 'normal';
+    }
+
+    /**
+     * Start the actual battle
+     */
+    startBattle(wildFruit, battleType) {
+        console.log('Starting battle with:', wildFruit);
+        
+        // Create battle data
+        const battleData = {
+            enemyFruit: wildFruit,
+            playerFruit: this.getPlayerFruit(),
+            battleType: battleType,
+            background: this.getBattleBackground(),
+            onBattleEnd: (result) => this.onBattleEnd(result)
+        };
+        
+        // Clear encounter popup
+        this.encounterPopup = null;
+        
+        // Transition to battle state via game engine
+        this.gameEngine.startBattle(battleData);
+    }
+
+    /**
+     * Get player's active fruit
+     */
+    getPlayerFruit() {
+        // For now, return a default cucumber
+        // Later this would come from player's team
+        return {
+            name: 'Cucumber',
+            species: 'cucumber',
+            level: 2,
+            hp: 50,
+            maxHP: 50,
+            stats: { attack: 16, defense: 14, speed: 12 },
+            moves: ['Vine Whip', 'Tackle'],
+            type: 'grass'
+        };
+    }
+
+    /**
+     * Get battle background based on current area
+     */
+    getBattleBackground() {
+        return 'garden'; // Could be 'forest', 'cave', etc.
+    }
+
+    /**
+     * Handle battle end results
+     */
+    onBattleEnd(result) {
+        console.log('Battle ended with result:', result);
+        
+        if (result.victory) {
+            // Handle EXP gain, level up, etc.
+            this.handleBattleVictory(result);
+        } else {
+            // Handle defeat
+            this.handleBattleDefeat(result);
+        }
+        
+        // Return to grid exploration
+        this.gameEngine.returnToWorld();
+    }
+
+    /**
+     * Handle battle victory
+     */
+    handleBattleVictory(result) {
+        // Show EXP gain popup
+        this.showMessage(`Cucumber gained ${result.expGained} EXP!`);
+        
+        // Check for level up
+        if (result.levelUp) {
+            this.showMessage(`Cucumber grew to level ${result.newLevel}!`);
+        }
+    }
+
+    /**
+     * Handle battle defeat  
+     */
+    handleBattleDefeat(result) {
+        this.showMessage('Cucumber fainted!');
+        // Maybe teleport to healing center
+    }
+
+    /**
+     * Show a temporary message
+     */
+    showMessage(text) {
+        this.interactionPrompt = {
+            type: 'message',
+            message: text,
             timestamp: Date.now()
         };
+        
+        setTimeout(() => {
+            this.interactionPrompt = null;
+        }, 3000);
     }
 
     /**

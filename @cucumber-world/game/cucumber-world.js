@@ -25,6 +25,9 @@ class CucumberWorld {
         this.gameState = 'menu'; // menu, loading, world, battle, inventory, newgame
         this.isInitialized = false;
         
+        // Battle system
+        this.currentBattle = null;
+        
         // UI state
         this.selectedSaveSlot = 1;
         this.selectedMenuOption = 0;
@@ -370,6 +373,9 @@ class CucumberWorld {
     renderBattleView() {
         if (this.battleSystem) {
             this.battleSystem.render(this.ctx);
+        } else if (this.currentBattle) {
+            // Render simple battle screen
+            this.renderSimpleBattle(this.ctx);
         } else {
             // Placeholder battle view
             const ctx = this.ctx;
@@ -381,6 +387,138 @@ class CucumberWorld {
             ctx.textAlign = 'center';
             ctx.fillText('Battle System Loading...', this.canvas.width / 2, this.canvas.height / 2);
         }
+    }
+
+    /**
+     * Render simple battle screen (placeholder)
+     */
+    renderSimpleBattle(ctx) {
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+        
+        // Battle background (garden theme)
+        const gradient = ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+        gradient.addColorStop(0, '#87CEEB'); // Sky blue
+        gradient.addColorStop(0.7, '#90EE90'); // Light green
+        gradient.addColorStop(1, '#228B22'); // Forest green
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Draw battle participants
+        if (this.currentBattle) {
+            const enemyFruit = this.currentBattle.enemyFruit;
+            const playerFruit = this.currentBattle.playerFruit;
+            
+            // Enemy fruit (top right)
+            ctx.save();
+            ctx.font = '60px Arial';
+            ctx.textAlign = 'center';
+            
+            // Enemy fruit emoji
+            const enemyEmoji = this.getFruitEmoji(enemyFruit.species);
+            ctx.fillText(enemyEmoji, centerX + 200, centerY - 150);
+            
+            // Enemy info
+            ctx.font = 'bold 18px Arial';
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
+            
+            const enemyText = `${enemyFruit.name} Lv.${enemyFruit.level}`;
+            ctx.strokeText(enemyText, centerX + 200, centerY - 80);
+            ctx.fillText(enemyText, centerX + 200, centerY - 80);
+            
+            // Enemy HP bar
+            this.renderHPBar(ctx, centerX + 120, centerY - 60, 160, 12, 
+                           enemyFruit.hp, enemyFruit.maxHP);
+            
+            // Player fruit (bottom left)
+            ctx.font = '60px Arial';
+            ctx.fillText('🥒', centerX - 200, centerY + 100);
+            
+            // Player info
+            ctx.font = 'bold 18px Arial';
+            const playerText = `${playerFruit.name} Lv.${playerFruit.level}`;
+            ctx.strokeText(playerText, centerX - 200, centerY + 140);
+            ctx.fillText(playerText, centerX - 200, centerY + 140);
+            
+            // Player HP bar
+            this.renderHPBar(ctx, centerX - 280, centerY + 160, 160, 12,
+                           playerFruit.hp, playerFruit.maxHP);
+            
+            ctx.restore();
+        }
+        
+        // Battle message box
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+        ctx.fillRect(50, this.canvas.height - 150, this.canvas.width - 100, 100);
+        
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(50, this.canvas.height - 150, this.canvas.width - 100, 100);
+        
+        // Battle message
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 18px Arial';
+        ctx.textAlign = 'left';
+        
+        let battleMessage = "Battle in progress...";
+        if (this.currentBattle) {
+            battleMessage = `A wild ${this.currentBattle.enemyFruit.name} appeared!`;
+        }
+        
+        ctx.fillText(battleMessage, 80, this.canvas.height - 110);
+        ctx.fillText("(Battle system in development)", 80, this.canvas.height - 80);
+    }
+
+    /**
+     * Render HP bar
+     */
+    renderHPBar(ctx, x, y, width, height, currentHP, maxHP) {
+        // Background
+        ctx.fillStyle = '#333';
+        ctx.fillRect(x, y, width, height);
+        
+        // HP bar
+        const hpRatio = currentHP / maxHP;
+        const hpWidth = width * hpRatio;
+        
+        // Color based on HP ratio
+        if (hpRatio > 0.5) {
+            ctx.fillStyle = '#4CAF50'; // Green
+        } else if (hpRatio > 0.2) {
+            ctx.fillStyle = '#FFC107'; // Yellow
+        } else {
+            ctx.fillStyle = '#F44336'; // Red
+        }
+        
+        ctx.fillRect(x, y, hpWidth, height);
+        
+        // Border
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x, y, width, height);
+        
+        // HP text
+        ctx.fillStyle = 'white';
+        ctx.font = '10px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(`${currentHP}/${maxHP}`, x + width/2, y + height + 12);
+    }
+
+    /**
+     * Get emoji for fruit species
+     */
+    getFruitEmoji(species) {
+        const emojis = {
+            'apple': '🍎',
+            'orange': '🍊', 
+            'banana': '🍌',
+            'berry': '🫐',
+            'cucumber': '🥒'
+        };
+        return emojis[species] || '🍎';
     }
 
     /**
@@ -771,6 +909,54 @@ class CucumberWorld {
     showMessage(message) {
         console.log(message);
         // This would show a proper UI message
+    }
+
+    /**
+     * Start a battle with given battle data
+     */
+    startBattle(battleData) {
+        console.log('Game engine starting battle:', battleData);
+        
+        // Store battle data
+        this.currentBattle = battleData;
+        
+        // Change to battle state
+        this.gameState = 'battle';
+        
+        // For now, show a placeholder battle screen
+        console.log('Battle started! (Battle system not yet implemented)');
+        
+        // Auto-end battle after 3 seconds for testing
+        setTimeout(() => {
+            this.endBattle({
+                victory: true,
+                expGained: 25,
+                levelUp: false
+            });
+        }, 3000);
+    }
+
+    /**
+     * End the current battle
+     */
+    endBattle(result) {
+        console.log('Battle ended with result:', result);
+        
+        // Call the battle end callback
+        if (this.currentBattle && this.currentBattle.onBattleEnd) {
+            this.currentBattle.onBattleEnd(result);
+        }
+        
+        // Clear battle data
+        this.currentBattle = null;
+    }
+
+    /**
+     * Return to world exploration from battle
+     */
+    returnToWorld() {
+        console.log('Returning to world exploration');
+        this.gameState = 'world';
     }
 
     /**
