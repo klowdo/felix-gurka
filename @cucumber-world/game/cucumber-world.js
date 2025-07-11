@@ -14,8 +14,10 @@ class CucumberWorld {
         this.fruitLoader = new FruitLoader();
         this.saveManager = new SaveManager();
         this.worldExplorer = null;
+        this.gridWorldExplorer = null;
         this.battleSystem = null;
         this.inventory = null;
+        this.useGridSystem = true; // Toggle between grid-based and free movement
         
         // Game state
         this.currentSave = null;
@@ -218,7 +220,9 @@ class CucumberWorld {
         // Update current game state
         switch (this.gameState) {
             case 'world':
-                if (this.worldExplorer) {
+                if (this.useGridSystem && this.gridWorldExplorer) {
+                    this.gridWorldExplorer.update(timestamp);
+                } else if (this.worldExplorer) {
                     this.worldExplorer.update(timestamp);
                 }
                 break;
@@ -342,7 +346,9 @@ class CucumberWorld {
      * Render world exploration view
      */
     renderWorldView() {
-        if (this.worldExplorer) {
+        if (this.useGridSystem && this.gridWorldExplorer) {
+            this.gridWorldExplorer.render(this.ctx);
+        } else if (this.worldExplorer) {
             this.worldExplorer.render(this.ctx);
         } else {
             // Placeholder world view
@@ -353,7 +359,8 @@ class CucumberWorld {
             ctx.fillStyle = 'white';
             ctx.font = 'bold 20px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText('World Explorer Loading...', this.canvas.width / 2, this.canvas.height / 2);
+            const systemType = this.useGridSystem ? 'Grid World' : 'World';
+            ctx.fillText(`${systemType} Explorer Loading...`, this.canvas.width / 2, this.canvas.height / 2);
         }
     }
 
@@ -531,7 +538,9 @@ class CucumberWorld {
                 this.handleNewGameClick(canvasX, canvasY);
                 break;
             case 'world':
-                if (this.worldExplorer) {
+                if (this.useGridSystem && this.gridWorldExplorer) {
+                    this.gridWorldExplorer.handleClick(canvasX, canvasY);
+                } else if (this.worldExplorer) {
                     this.worldExplorer.handleClick(canvasX, canvasY);
                 }
                 break;
@@ -714,10 +723,19 @@ class CucumberWorld {
      * Load world explorer system
      */
     async loadWorldExplorer() {
-        // Initialize the world explorer
-        this.worldExplorer = new WorldExplorer(this, this.fruitLoader);
-        await this.worldExplorer.init(this.currentSave.currentWorld, this.currentSave.currentArea || 'vegetable_patch');
-        console.log('World explorer loaded successfully');
+        if (this.useGridSystem) {
+            // Initialize grid-based world explorer
+            this.gridWorldExplorer = new GridWorldExplorer(this, this.fruitLoader);
+            const levelId = this.currentSave.currentArea === 'vegetable_patch' ? 
+                'vegetable_patch_grid' : (this.currentSave.currentArea + '_grid');
+            await this.gridWorldExplorer.init(this.currentSave.currentWorld, levelId);
+            console.log('Grid world explorer loaded successfully');
+        } else {
+            // Initialize traditional world explorer
+            this.worldExplorer = new WorldExplorer(this, this.fruitLoader);
+            await this.worldExplorer.init(this.currentSave.currentWorld, this.currentSave.currentArea || 'vegetable_patch');
+            console.log('World explorer loaded successfully');
+        }
     }
 
     /**

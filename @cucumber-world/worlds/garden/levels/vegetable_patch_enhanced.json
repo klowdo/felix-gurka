@@ -1,0 +1,299 @@
+{
+  "id": "vegetable_patch_enhanced",
+  "name": "Enhanced Vegetable Patch",
+  "description": "A well-tended garden area where vegetables and fruits grow side by side, now with winding paths and natural obstacles",
+  "size": { "width": 1200, "height": 800 },
+  "background": {
+    "type": "gradient",
+    "colors": ["#90EE90", "#98FB98"],
+    "pattern": "grass_texture"
+  },
+  "lighting": {
+    "ambient": 0.8,
+    "time": "day",
+    "shadows": true
+  },
+  "paths": [
+    {
+      "id": "main_garden_path",
+      "type": "dirt_path",
+      "points": [[100, 600], [300, 550], [500, 500], [700, 450], [900, 400], [1100, 350]],
+      "width": 45,
+      "style": "curved",
+      "decorations": ["footprints", "stones"],
+      "condition": "clear"
+    },
+    {
+      "id": "flower_walk",
+      "type": "stone_path",
+      "points": [[200, 200], [400, 180], [600, 200], [800, 220]],
+      "width": 35,
+      "style": "curved",
+      "decorations": ["flowers", "stones"],
+      "condition": "clear"
+    },
+    {
+      "id": "secret_trail",
+      "type": "grass_trail",
+      "points": [[50, 300], [150, 250], [250, 200]],
+      "width": 25,
+      "style": "winding",
+      "decorations": ["mushrooms"],
+      "condition": "overgrown"
+    }
+  ],
+  "environment": [
+    {
+      "id": "berry_bush_01",
+      "type": "berry_bush",
+      "position": [250, 350],
+      "variant": "fruiting",
+      "health": 100,
+      "drops": ["berry", "leaf"],
+      "respawn_time": 300,
+      "interactive": true
+    },
+    {
+      "id": "berry_bush_02",
+      "type": "berry_bush",
+      "position": [450, 280],
+      "variant": "flowering",
+      "health": 85,
+      "drops": ["berry"],
+      "respawn_time": 300,
+      "interactive": true
+    },
+    {
+      "id": "flower_bush_01",
+      "type": "flower_bush",
+      "position": [350, 150],
+      "variant": "pink",
+      "interactive": false
+    },
+    {
+      "id": "flower_bush_02",
+      "type": "flower_bush",
+      "position": [650, 180],
+      "variant": "purple",
+      "interactive": false
+    },
+    {
+      "id": "boulder_01",
+      "type": "boulder",
+      "position": [150, 500],
+      "variant": "mossy",
+      "interactive": true,
+      "special_actions": ["climb", "push"]
+    },
+    {
+      "id": "fruit_tree_01",
+      "type": "fruit_tree",
+      "position": [800, 300],
+      "variant": "apple",
+      "drops": ["apple", "branch"],
+      "respawn_time": 600,
+      "interactive": true
+    },
+    {
+      "id": "fruit_tree_02",
+      "type": "fruit_tree",
+      "position": [950, 500],
+      "variant": "orange",
+      "drops": ["orange", "leaf"],
+      "respawn_time": 600,
+      "interactive": true
+    },
+    {
+      "id": "small_stones_01",
+      "type": "small_stone",
+      "position": [180, 400],
+      "variant": "gray"
+    },
+    {
+      "id": "small_stones_02",
+      "type": "small_stone",
+      "position": [320, 420],
+      "variant": "brown"
+    },
+    {
+      "id": "small_stones_03",
+      "type": "small_stone",
+      "position": [520, 380],
+      "variant": "mossy"
+    },
+    {
+      "id": "flower_patch_01",
+      "type": "flower_patch",
+      "position": [400, 250],
+      "variant": "wildflowers"
+    },
+    {
+      "id": "flower_patch_02",
+      "type": "flower_patch",
+      "position": [750, 400],
+      "variant": "daisies"
+    },
+    {
+      "id": "flower_patch_03",
+      "type": "flower_patch",
+      "position": [550, 600],
+      "variant": "roses"
+    },
+    {
+      "id": "grass_tuft_01",
+      "type": "grass_tuft",
+      "position": [120, 350],
+      "variant": "tall"
+    },
+    {
+      "id": "grass_tuft_02",
+      "type": "grass_tuft",
+      "position": [280, 480],
+      "variant": "wild"
+    },
+    {
+      "id": "grass_tuft_03",
+      "type": "grass_tuft",
+      "position": [480, 320],
+      "variant": "short"
+    },
+    {
+      "id": "thorny_bush_01",
+      "type": "thorny_bush",
+      "position": [600, 500],
+      "variant": "dense",
+      "blocks_movement": true
+    }
+  ],
+  "exits": [
+    {
+      "id": "to_entrance",
+      "name": "Garden Entrance",
+      "position": [50, 550],
+      "target_world": "garden",
+      "target_level": "entrance",
+      "target_position": [1150, 400],
+      "trigger_radius": 30,
+      "visual_indicator": "path_arrow",
+      "transition_type": "fade"
+    },
+    {
+      "id": "to_flower_meadow",
+      "name": "Flower Meadow",
+      "position": [850, 150],
+      "target_world": "garden",
+      "target_level": "flower_meadow",
+      "target_position": [200, 700],
+      "trigger_radius": 25,
+      "visual_indicator": "glow_orb",
+      "transition_type": "slide"
+    },
+    {
+      "id": "secret_exit",
+      "name": "Secret Grove",
+      "position": [280, 180],
+      "target_world": "garden",
+      "target_level": "secret_grove",
+      "target_position": [100, 400],
+      "trigger_radius": 20,
+      "visual_indicator": "fairy_lights",
+      "transition_type": "fade",
+      "requirements": ["found_secret_key"],
+      "hidden": true
+    }
+  ],
+  "encounters": [
+    {
+      "type": "wild_fruit",
+      "areas": [
+        {
+          "bounds": [[200, 300], [400, 500]],
+          "fruits": ["apple", "orange"],
+          "encounter_rate": 0.15
+        },
+        {
+          "bounds": [[700, 250], [1000, 450]],
+          "fruits": ["banana", "apple"],
+          "encounter_rate": 0.12
+        }
+      ]
+    },
+    {
+      "type": "hidden_item",
+      "areas": [
+        {
+          "bounds": [[100, 200], [300, 400]],
+          "items": ["rare_seed", "garden_tool"],
+          "encounter_rate": 0.05
+        }
+      ]
+    }
+  ],
+  "interactive_objects": [
+    {
+      "id": "vegetable_sign",
+      "type": "wooden_sign",
+      "position": [300, 180],
+      "variant": "weathered",
+      "text": "Welcome to the Enhanced Vegetable Patch!\\nFresh fruits grow here daily.\\nFollow the paths to explore safely.",
+      "font": "rustic"
+    },
+    {
+      "id": "garden_well",
+      "type": "well",
+      "position": [500, 400],
+      "variant": "stone",
+      "provides_healing": true,
+      "special_actions": ["drink", "examine"]
+    },
+    {
+      "id": "tool_chest",
+      "type": "treasure_chest",
+      "position": [150, 200],
+      "variant": "wooden",
+      "contains_items": ["garden_hoe", "watering_can", "seed_pouch"],
+      "special_actions": ["open", "examine"]
+    }
+  ],
+  "ambient_effects": [
+    {
+      "type": "particle_system",
+      "effect": "pollen_drift",
+      "density": 0.3,
+      "area": "full_level"
+    },
+    {
+      "type": "sound_ambient",
+      "effect": "birds_chirping",
+      "volume": 0.2,
+      "area": "full_level"
+    },
+    {
+      "type": "wind_effect",
+      "strength": 0.4,
+      "direction": "northeast",
+      "affects": ["grass", "flowers", "leaves"]
+    }
+  ],
+  "level_objectives": [
+    {
+      "id": "collect_berries",
+      "description": "Harvest berries from the berry bushes",
+      "type": "collection",
+      "target": 5,
+      "item": "berry"
+    },
+    {
+      "id": "find_secret_path",
+      "description": "Discover the hidden path to the secret grove",
+      "type": "exploration",
+      "target_area": "secret_trail"
+    },
+    {
+      "id": "water_plants",
+      "description": "Use the well to water nearby plants",
+      "type": "interaction",
+      "requires": "watering_can"
+    }
+  ]
+}

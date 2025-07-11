@@ -1,0 +1,308 @@
+{
+  "version": "1.0",
+  "description": "Grid-based tile system for Pokemon-style movement in Cucumber World RPG",
+  "tile_size": 32,
+  "grid_dimensions": {
+    "width": 37,
+    "height": 25,
+    "total_tiles": 925
+  },
+  "tile_types": {
+    "terrain": {
+      "grass": {
+        "id": "grass",
+        "name": "Grass",
+        "emoji": "🌱",
+        "color": "#7CB342",
+        "walkable": true,
+        "encounter_rate": 0.03,
+        "encounter_types": ["wild_fruit"],
+        "movement_cost": 1,
+        "description": "Tall grass where wild fruits might hide"
+      },
+      "path": {
+        "id": "path",
+        "name": "Path",
+        "emoji": "⬜",
+        "color": "#8B7355",
+        "walkable": true,
+        "encounter_rate": 0.02,
+        "encounter_types": ["trainer"],
+        "movement_cost": 1,
+        "speed_bonus": 1.2,
+        "description": "A clear walking path"
+      },
+      "water": {
+        "id": "water",
+        "name": "Water",
+        "emoji": "💧",
+        "color": "#4682B4",
+        "walkable": false,
+        "requires_ability": "surf",
+        "encounter_rate": 0.15,
+        "encounter_types": ["water_fruit"],
+        "movement_cost": 2,
+        "description": "Deep water that requires special ability to cross"
+      },
+      "stone": {
+        "id": "stone",
+        "name": "Stone Floor",
+        "emoji": "⬛",
+        "color": "#A0A0A0",
+        "walkable": true,
+        "encounter_rate": 0.0,
+        "movement_cost": 1,
+        "speed_bonus": 1.1,
+        "description": "Solid stone flooring"
+      },
+      "sand": {
+        "id": "sand",
+        "name": "Sand",
+        "emoji": "🟫",
+        "color": "#F4A460",
+        "walkable": true,
+        "encounter_rate": 0.08,
+        "encounter_types": ["desert_fruit"],
+        "movement_cost": 1.5,
+        "description": "Soft sand that slows movement"
+      }
+    },
+    "obstacles": {
+      "tree": {
+        "id": "tree",
+        "name": "Tree",
+        "emoji": "🌳",
+        "color": "#228B22",
+        "walkable": false,
+        "interactive": true,
+        "special_actions": ["cut"],
+        "blocks_movement": true,
+        "description": "A large tree blocking the path"
+      },
+      "boulder": {
+        "id": "boulder",
+        "name": "Boulder",
+        "emoji": "🪨",
+        "color": "#696969",
+        "walkable": false,
+        "interactive": true,
+        "special_actions": ["strength"],
+        "blocks_movement": true,
+        "moveable": true,
+        "description": "A heavy boulder that might be moved with strength"
+      },
+      "bush": {
+        "id": "bush",
+        "name": "Berry Bush",
+        "emoji": "🫐",
+        "color": "#4CAF50",
+        "walkable": false,
+        "interactive": true,
+        "special_actions": ["examine", "harvest"],
+        "encounter_rate": 0.15,
+        "encounter_types": ["wild_fruit"],
+        "blocks_movement": true,
+        "harvestable": true,
+        "drops": ["berry", "leaf"],
+        "respawn_time": 300,
+        "description": "A berry bush where fruits often hide"
+      },
+      "fence": {
+        "id": "fence",
+        "name": "Fence",
+        "emoji": "🚧",
+        "color": "#8B4513",
+        "walkable": false,
+        "blocks_movement": true,
+        "description": "A wooden fence blocking passage"
+      }
+    },
+    "interactive": {
+      "door": {
+        "id": "door",
+        "name": "Door",
+        "emoji": "🚪",
+        "color": "#8B4513",
+        "walkable": true,
+        "interactive": true,
+        "special_actions": ["enter"],
+        "transition": true,
+        "description": "A door leading to another area"
+      },
+      "stairs_up": {
+        "id": "stairs_up",
+        "name": "Stairs Up",
+        "emoji": "⬆️",
+        "color": "#CD853F",
+        "walkable": true,
+        "interactive": true,
+        "special_actions": ["climb"],
+        "transition": true,
+        "direction": "up",
+        "description": "Stairs leading upward"
+      },
+      "stairs_down": {
+        "id": "stairs_down",
+        "name": "Stairs Down",
+        "emoji": "⬇️",
+        "color": "#CD853F",
+        "walkable": true,
+        "interactive": true,
+        "special_actions": ["climb"],
+        "transition": true,
+        "direction": "down",
+        "description": "Stairs leading downward"
+      },
+      "sign": {
+        "id": "sign",
+        "name": "Sign",
+        "emoji": "🪧",
+        "color": "#DEB887",
+        "walkable": false,
+        "interactive": true,
+        "special_actions": ["read"],
+        "blocks_movement": true,
+        "has_text": true,
+        "description": "A sign with important information"
+      },
+      "chest": {
+        "id": "chest",
+        "name": "Treasure Chest",
+        "emoji": "📦",
+        "color": "#DAA520",
+        "walkable": false,
+        "interactive": true,
+        "special_actions": ["open"],
+        "blocks_movement": true,
+        "contains_items": true,
+        "one_time_use": true,
+        "description": "A chest that might contain valuable items"
+      },
+      "well": {
+        "id": "well",
+        "name": "Well",
+        "emoji": "⛲",
+        "color": "#4682B4",
+        "walkable": false,
+        "interactive": true,
+        "special_actions": ["drink", "examine"],
+        "blocks_movement": true,
+        "healing": true,
+        "description": "A well with fresh, healing water"
+      }
+    },
+    "special": {
+      "warp": {
+        "id": "warp",
+        "name": "Warp Tile",
+        "emoji": "✨",
+        "color": "#FF69B4",
+        "walkable": true,
+        "interactive": true,
+        "special_actions": ["warp"],
+        "transition": true,
+        "instant": true,
+        "description": "A magical tile that instantly transports you"
+      },
+      "heal": {
+        "id": "heal",
+        "name": "Healing Tile",
+        "emoji": "💖",
+        "color": "#FF1493",
+        "walkable": true,
+        "interactive": true,
+        "healing": true,
+        "auto_trigger": true,
+        "description": "A magical tile that restores health"
+      },
+      "save": {
+        "id": "save",
+        "name": "Save Point",
+        "emoji": "💾",
+        "color": "#4169E1",
+        "walkable": true,
+        "interactive": true,
+        "special_actions": ["save"],
+        "description": "A save point where you can record your progress"
+      }
+    }
+  },
+  "encounter_zones": {
+    "grass_area": {
+      "tiles": ["grass"],
+      "encounter_rate": 0.1,
+      "fruits": ["apple", "orange", "banana"],
+      "levels": [1, 2, 3]
+    },
+    "bush_area": {
+      "tiles": ["bush"],
+      "encounter_rate": 0.3,
+      "fruits": ["berry", "rare_fruit"],
+      "levels": [2, 3, 4],
+      "special": true
+    },
+    "water_area": {
+      "tiles": ["water"],
+      "encounter_rate": 0.15,
+      "fruits": ["water_fruit", "blue_fruit"],
+      "levels": [3, 4, 5],
+      "requires_ability": "surf"
+    },
+    "trainer_route": {
+      "tiles": ["path"],
+      "encounter_rate": 0.02,
+      "trainers": ["cucumber_trainer", "fruit_master"],
+      "one_time": true
+    }
+  },
+  "tile_animations": {
+    "grass_sway": {
+      "tiles": ["grass"],
+      "type": "oscillate",
+      "speed": 2000,
+      "amplitude": 2
+    },
+    "water_flow": {
+      "tiles": ["water"],
+      "type": "flow",
+      "speed": 1500,
+      "direction": "horizontal"
+    },
+    "sparkle": {
+      "tiles": ["warp", "heal"],
+      "type": "particle",
+      "speed": 500,
+      "particles": ["✨", "⭐", "💫"]
+    },
+    "bush_rustle": {
+      "tiles": ["bush"],
+      "type": "rustle",
+      "trigger": "approach",
+      "intensity": 3
+    }
+  },
+  "movement_rules": {
+    "grid_size": 32,
+    "movement_speed": 150,
+    "diagonal_movement": false,
+    "slide_on_ice": false,
+    "auto_center": true,
+    "collision_check": "tile_based"
+  },
+  "visual_effects": {
+    "grid_overlay": {
+      "show_in_debug": true,
+      "color": "rgba(255, 255, 255, 0.1)",
+      "thickness": 1
+    },
+    "tile_highlight": {
+      "color": "rgba(255, 255, 0, 0.3)",
+      "duration": 200
+    },
+    "movement_trail": {
+      "enabled": false,
+      "color": "rgba(0, 255, 0, 0.2)",
+      "fade_time": 500
+    }
+  }
+}

@@ -1,0 +1,268 @@
+{
+  "version": "1.0",
+  "description": "Environmental object definitions for Cucumber World RPG",
+  "object_types": {
+    "bushes": {
+      "berry_bush": {
+        "name": "Berry Bush",
+        "emoji": "🫐",
+        "size": { "width": 40, "height": 35 },
+        "collision_radius": 20,
+        "collision": true,
+        "interactive": true,
+        "variants": ["green", "flowering", "fruiting"],
+        "drops": ["berry", "leaf"],
+        "respawn_time": 300,
+        "animations": ["idle_sway", "rustle_on_touch"],
+        "health": 100,
+        "description": "A lush bush heavy with ripe berries"
+      },
+      "flower_bush": {
+        "name": "Flower Bush",
+        "emoji": "🌸",
+        "size": { "width": 35, "height": 30 },
+        "collision_radius": 18,
+        "collision": true,
+        "interactive": false,
+        "variants": ["pink", "white", "purple"],
+        "animations": ["gentle_sway", "petal_fall"],
+        "description": "A decorative bush blooming with colorful flowers"
+      },
+      "thorny_bush": {
+        "name": "Thorny Bush",
+        "emoji": "🌿",
+        "size": { "width": 45, "height": 38 },
+        "collision_radius": 25,
+        "collision": true,
+        "interactive": false,
+        "variants": ["dense", "sparse"],
+        "animations": ["defensive_rustle"],
+        "blocks_movement": true,
+        "description": "A dangerous bush covered in sharp thorns"
+      }
+    },
+    "rocks": {
+      "small_stone": {
+        "name": "Small Stone",
+        "emoji": "🪨",
+        "size": { "width": 25, "height": 20 },
+        "collision_radius": 15,
+        "collision": false,
+        "interactive": false,
+        "variants": ["gray", "brown", "mossy"],
+        "description": "A small decorative stone"
+      },
+      "boulder": {
+        "name": "Boulder",
+        "emoji": "⛰️",
+        "size": { "width": 60, "height": 50 },
+        "collision_radius": 30,
+        "collision": true,
+        "interactive": true,
+        "variants": ["normal", "cracked", "ancient"],
+        "special_actions": ["climb", "push"],
+        "description": "A large boulder that blocks the path"
+      },
+      "crystal_formation": {
+        "name": "Crystal Formation",
+        "emoji": "💎",
+        "size": { "width": 35, "height": 40 },
+        "collision_radius": 20,
+        "collision": true,
+        "interactive": true,
+        "variants": ["blue", "purple", "rainbow"],
+        "animations": ["sparkle", "glow"],
+        "drops": ["crystal_shard", "energy"],
+        "description": "A mystical crystal formation that glows with inner light"
+      }
+    },
+    "trees": {
+      "fruit_tree": {
+        "name": "Fruit Tree",
+        "emoji": "🌳",
+        "size": { "width": 50, "height": 65 },
+        "collision_radius": 25,
+        "collision": true,
+        "interactive": true,
+        "variants": ["apple", "orange", "cherry"],
+        "drops": ["fruit", "branch", "leaf"],
+        "respawn_time": 600,
+        "animations": ["branch_sway", "leaf_fall"],
+        "seasonal": true,
+        "description": "A tall tree bearing delicious fruits"
+      },
+      "shade_tree": {
+        "name": "Shade Tree",
+        "emoji": "🌲",
+        "size": { "width": 45, "height": 60 },
+        "collision_radius": 22,
+        "collision": true,
+        "interactive": false,
+        "variants": ["oak", "pine", "birch"],
+        "animations": ["gentle_sway"],
+        "provides_shade": true,
+        "description": "A large tree providing cool shade"
+      },
+      "ancient_tree": {
+        "name": "Ancient Tree",
+        "emoji": "🌳",
+        "size": { "width": 80, "height": 90 },
+        "collision_radius": 40,
+        "collision": true,
+        "interactive": true,
+        "variants": ["mystical", "wise", "guardian"],
+        "special_actions": ["commune", "rest"],
+        "animations": ["deep_sway", "aura_pulse"],
+        "provides_blessing": true,
+        "description": "An ancient tree with mystical powers"
+      }
+    },
+    "decorations": {
+      "flower_patch": {
+        "name": "Flower Patch",
+        "emoji": "🌺",
+        "size": { "width": 30, "height": 25 },
+        "collision_radius": 0,
+        "collision": false,
+        "interactive": false,
+        "variants": ["wildflowers", "roses", "daisies"],
+        "animations": ["gentle_sway", "butterfly_visit"],
+        "description": "A beautiful patch of colorful flowers"
+      },
+      "mushroom_circle": {
+        "name": "Mushroom Circle",
+        "emoji": "🍄",
+        "size": { "width": 35, "height": 30 },
+        "collision_radius": 0,
+        "collision": false,
+        "interactive": true,
+        "variants": ["fairy_ring", "poison", "glowing"],
+        "animations": ["spore_release", "glow_pulse"],
+        "special_actions": ["investigate"],
+        "description": "A mysterious circle of mushrooms"
+      },
+      "grass_tuft": {
+        "name": "Grass Tuft",
+        "emoji": "🌱",
+        "size": { "width": 20, "height": 15 },
+        "collision_radius": 0,
+        "collision": false,
+        "interactive": false,
+        "variants": ["short", "tall", "wild"],
+        "animations": ["wind_sway"],
+        "description": "A small tuft of grass swaying in the breeze"
+      }
+    },
+    "interactive": {
+      "wooden_sign": {
+        "name": "Wooden Sign",
+        "emoji": "🪧",
+        "size": { "width": 30, "height": 35 },
+        "collision_radius": 15,
+        "collision": true,
+        "interactive": true,
+        "variants": ["weathered", "new", "carved"],
+        "special_actions": ["read"],
+        "text_content": true,
+        "description": "A wooden sign with important information"
+      },
+      "treasure_chest": {
+        "name": "Treasure Chest",
+        "emoji": "📦",
+        "size": { "width": 35, "height": 30 },
+        "collision_radius": 18,
+        "collision": true,
+        "interactive": true,
+        "variants": ["wooden", "iron", "golden"],
+        "special_actions": ["open", "examine"],
+        "contains_items": true,
+        "animations": ["sparkle", "lock_shake"],
+        "description": "A mysterious chest that might contain treasures"
+      },
+      "well": {
+        "name": "Well",
+        "emoji": "⛲",
+        "size": { "width": 40, "height": 45 },
+        "collision_radius": 20,
+        "collision": true,
+        "interactive": true,
+        "variants": ["stone", "brick", "ancient"],
+        "special_actions": ["drink", "wish", "examine"],
+        "provides_healing": true,
+        "description": "An old well with clear, refreshing water"
+      },
+      "bridge": {
+        "name": "Bridge",
+        "emoji": "🌉",
+        "size": { "width": 80, "height": 20 },
+        "collision_radius": 0,
+        "collision": false,
+        "interactive": true,
+        "variants": ["wooden", "stone", "rope"],
+        "special_actions": ["cross"],
+        "allows_crossing": true,
+        "description": "A bridge spanning across water or a chasm"
+      }
+    }
+  },
+  "animation_effects": {
+    "idle_sway": {
+      "type": "rotation",
+      "amplitude": 2,
+      "frequency": 1.5,
+      "description": "Gentle swaying motion"
+    },
+    "rustle_on_touch": {
+      "type": "shake",
+      "amplitude": 5,
+      "duration": 300,
+      "trigger": "interaction",
+      "description": "Violent rustling when touched"
+    },
+    "gentle_sway": {
+      "type": "rotation",
+      "amplitude": 1,
+      "frequency": 2,
+      "description": "Very gentle swaying"
+    },
+    "petal_fall": {
+      "type": "particle",
+      "particle_type": "petal",
+      "frequency": 0.1,
+      "description": "Occasional falling petals"
+    },
+    "sparkle": {
+      "type": "particle",
+      "particle_type": "sparkle",
+      "frequency": 0.5,
+      "description": "Magical sparkling effect"
+    },
+    "glow": {
+      "type": "lighting",
+      "color": "#FFD700",
+      "intensity": 0.3,
+      "pulse": true,
+      "description": "Soft glowing light"
+    },
+    "wind_sway": {
+      "type": "deformation",
+      "amplitude": 3,
+      "frequency": 2.5,
+      "description": "Swaying in the wind"
+    }
+  },
+  "collision_shapes": {
+    "circle": {
+      "type": "circle",
+      "description": "Circular collision area around object center"
+    },
+    "rectangle": {
+      "type": "rectangle",
+      "description": "Rectangular collision area matching object size"
+    },
+    "custom": {
+      "type": "polygon",
+      "description": "Custom polygon shape for complex objects"
+    }
+  }
+}

@@ -8,15 +8,24 @@ class WorldExplorer {
         this.gameEngine = gameEngine;
         this.fruitLoader = fruitLoader;
         
+        // Enhanced rendering and collision systems
+        this.worldRenderer = new WorldRenderer();
+        this.collisionSystem = new CollisionSystem();
+        
         // Current world state
         this.currentWorld = null;
         this.currentArea = null;
         this.worldData = null;
+        this.levelData = null;
         
         // Player position (centered for larger canvas)
         this.playerX = 600;
         this.playerY = 400;
         this.playerSpeed = 3;
+        this.playerRadius = 15;
+        
+        // Path movement bonuses
+        this.currentSpeedModifier = 1.0;
         
         // Exploration state
         this.explorationTimer = 0;
@@ -31,6 +40,7 @@ class WorldExplorer {
         this.showAreaInfo = false;
         this.areaInfoTimer = 0;
         this.encounterPopup = null;
+        this.nearbyInteractables = [];
         
         // Movement
         this.keys = {};
@@ -51,6 +61,15 @@ class WorldExplorer {
             this.currentWorld = worldId;
             this.currentArea = areaId;
             
+            // Try to load enhanced level data first
+            await this.loadEnhancedLevel(areaId);
+            
+            // Initialize enhanced systems
+            await this.worldRenderer.init();
+            if (this.levelData) {
+                this.collisionSystem.init(this.levelData);
+            }
+            
             // Set starting position based on area
             this.setStartingPosition(areaId);
             
@@ -58,7 +77,7 @@ class WorldExplorer {
             this.showAreaInfo = true;
             this.areaInfoTimer = 3000; // Show for 3 seconds
             
-            console.log('World explorer initialized');
+            console.log('World explorer initialized with enhanced systems');
         } catch (error) {
             console.error('Failed to initialize world explorer:', error);
             throw error;
@@ -81,8 +100,16 @@ class WorldExplorer {
             }
         }
 
-        // Handle player movement
+        // Handle player movement with collision detection
         this.updatePlayerMovement();
+        
+        // Update collision system
+        this.collisionSystem.update(this.playerX, this.playerY, this.playerRadius);
+        
+        // Update nearby interactables
+        this.nearbyInteractables = this.collisionSystem.getInteractablesNear(
+            this.playerX, this.playerY, 50
+        );
         
         // Update player animation
         if (this.animationTimer >= 200) { // Change frame every 200ms
@@ -104,19 +131,22 @@ class WorldExplorer {
      * @param {CanvasRenderingContext2D} ctx - Canvas context
      */
     render(ctx) {
-        // Clear and set background
-        this.renderBackground(ctx);
+        if (this.levelData && this.worldRenderer) {
+            // Use enhanced renderer for new levels
+            this.worldRenderer.renderLevel(ctx, this.levelData, 
+                { x: this.playerX, y: this.playerY }, this.explorationTimer);
+            
+            // Render player (enhanced renderer handles environment)
+            this.renderPlayer(ctx);
+            
+            // Render enhanced UI
+            this.renderEnhancedUI(ctx);
+        } else {
+            // Fallback to legacy rendering
+            this.renderLegacy(ctx);
+        }
         
-        // Render world elements
-        this.renderWorldElements(ctx);
-        
-        // Render player
-        this.renderPlayer(ctx);
-        
-        // Render UI elements
-        this.renderUI(ctx);
-        
-        // Render encounter popup if active
+        // Always render encounter popup if active
         if (this.encounterPopup) {
             this.renderEncounterPopup(ctx);
         }
@@ -440,14 +470,31 @@ class WorldExplorer {
         let deltaY = 0;
         
         // WASD and Arrow keys
-        if (this.keys['w'] || this.keys['arrowup']) deltaY -= this.playerSpeed;
-        if (this.keys['s'] || this.keys['arrowdown']) deltaY += this.playerSpeed;
-        if (this.keys['a'] || this.keys['arrowleft']) deltaX -= this.playerSpeed;
-        if (this.keys['d'] || this.keys['arrowright']) deltaX += this.playerSpeed;
+        if (this.keys['w'] || this.keys['arrowup']) deltaY -= this.playerSpeed * this.currentSpeedModifier;
+        if (this.keys['s'] || this.keys['arrowdown']) deltaY += this.playerSpeed * this.currentSpeedModifier;
+        if (this.keys['a'] || this.keys['arrowleft']) deltaX -= this.playerSpeed * this.currentSpeedModifier;
+        if (this.keys['d'] || this.keys['arrowright']) deltaX += this.playerSpeed * this.currentSpeedModifier;
         
-        // Apply movement with bounds checking (adjusted for larger canvas)
-        this.playerX = Math.max(30, Math.min(this.playerX + deltaX, 1170));
-        this.playerY = Math.max(60, Math.min(this.playerY + deltaY, 770));
+        if (deltaX !== 0 || deltaY !== 0) {
+            const newX = this.playerX + deltaX;
+            const newY = this.playerY + deltaY;
+            
+            // Use collision system for movement resolution
+            if (this.collisionSystem) {
+                const resolved = this.collisionSystem.resolveMovement(
+                    this.playerX, this.playerY, newX, newY, this.playerRadius
+                );
+                this.playerX = resolved.x;
+                this.playerY = resolved.y;
+            } else {
+                // Fallback bounds checking
+                this.playerX = Math.max(30, Math.min(newX, 1170));
+                this.playerY = Math.max(60, Math.min(newY, 770));
+            }
+            
+            // Update speed modifier based on current surface
+            this.updateSpeedModifier();
+        }
     }
 
     /**
@@ -632,6 +679,183 @@ class WorldExplorer {
         this.currentArea = state.currentArea;
         this.playerX = state.playerX || 400;
         this.playerY = state.playerY || 300;
+    }
+
+    /**
+     * Load enhanced level data
+     */
+    async loadEnhancedLevel(areaId) {
+        try {
+            // Try to load enhanced level data
+            const levelPath = `@cucumber-world/worlds/${this.currentWorld}/levels/${areaId}_enhanced.json`;
+            const response = await fetch(levelPath);
+            
+            if (response.ok) {
+                this.levelData = await response.json();
+                console.log('Loaded enhanced level data for:', areaId);
+            } else {
+                console.log('No enhanced level data found, using legacy rendering');
+                this.levelData = null;
+            }
+        } catch (error) {
+            console.log('Could not load enhanced level data:', error.message);
+            this.levelData = null;
+        }
+    }
+
+    /**
+     * Update speed modifier based on current path
+     */
+    updateSpeedModifier() {
+        if (!this.levelData || !this.levelData.paths) {
+            this.currentSpeedModifier = 1.0;
+            return;
+        }
+
+        // Check if player is on any path
+        let onPath = false;
+        for (const path of this.levelData.paths) {
+            if (this.isPlayerOnPath(path)) {
+                // Get path type speed modifier
+                const pathType = path.type || 'dirt_path';
+                this.currentSpeedModifier = this.getPathSpeedModifier(pathType);
+                onPath = true;
+                break;
+            }
+        }
+
+        if (!onPath) {
+            this.currentSpeedModifier = 1.0; // Normal speed off paths
+        }
+    }
+
+    /**
+     * Check if player is on a specific path
+     */
+    isPlayerOnPath(path) {
+        if (!path.points || path.points.length < 2) return false;
+
+        const pathWidth = path.width || 40;
+        const tolerance = pathWidth / 2;
+
+        // Check distance to each path segment
+        for (let i = 0; i < path.points.length - 1; i++) {
+            const [x1, y1] = path.points[i];
+            const [x2, y2] = path.points[i + 1];
+            
+            const distance = this.distanceToLineSegment(
+                this.playerX, this.playerY, x1, y1, x2, y2
+            );
+
+            if (distance <= tolerance) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Calculate distance from point to line segment
+     */
+    distanceToLineSegment(px, py, x1, y1, x2, y2) {
+        const A = px - x1;
+        const B = py - y1;
+        const C = x2 - x1;
+        const D = y2 - y1;
+
+        const dot = A * C + B * D;
+        const lenSq = C * C + D * D;
+        
+        if (lenSq === 0) {
+            // Line segment is a point
+            return Math.sqrt(A * A + B * B);
+        }
+
+        let param = dot / lenSq;
+        param = Math.max(0, Math.min(1, param));
+
+        const xx = x1 + param * C;
+        const yy = y1 + param * D;
+
+        const dx = px - xx;
+        const dy = py - yy;
+        
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    /**
+     * Get speed modifier for path type
+     */
+    getPathSpeedModifier(pathType) {
+        const speedModifiers = {
+            dirt_path: 1.2,
+            stone_path: 1.3,
+            grass_trail: 1.0,
+            wooden_walkway: 1.25,
+            crystal_path: 1.4,
+            water_crossing: 0.8
+        };
+
+        return speedModifiers[pathType] || 1.0;
+    }
+
+    /**
+     * Render enhanced UI elements
+     */
+    renderEnhancedUI(ctx) {
+        // Render current location information
+        this.renderLocationInfo(ctx);
+        
+        // Render area transition info
+        if (this.showAreaInfo) {
+            this.renderAreaInfo(ctx);
+        }
+        
+        // Render interaction hints
+        this.renderInteractionHints(ctx);
+        
+        // Render movement instructions
+        this.renderInstructions(ctx);
+    }
+
+    /**
+     * Render interaction hints for nearby objects
+     */
+    renderInteractionHints(ctx) {
+        if (this.nearbyInteractables.length === 0) return;
+
+        // Show interaction prompt
+        ctx.save();
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.fillRect(this.playerX - 60, this.playerY - 50, 120, 25);
+        
+        ctx.strokeStyle = '#4CAF50';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(this.playerX - 60, this.playerY - 50, 120, 25);
+        
+        ctx.fillStyle = '#2F4F2F';
+        ctx.font = 'bold 12px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Press E to interact', this.playerX, this.playerY - 32);
+        ctx.restore();
+    }
+
+    /**
+     * Legacy rendering method for compatibility
+     */
+    renderLegacy(ctx) {
+        // Clear and set background
+        this.renderBackground(ctx);
+        
+        // Render world elements
+        this.renderWorldElements(ctx);
+        
+        // Render player
+        this.renderPlayer(ctx);
+        
+        // Render UI elements
+        this.renderUI(ctx);
     }
 }
 
