@@ -723,11 +723,15 @@ class CucumberWorld {
      * Load world explorer system
      */
     async loadWorldExplorer() {
+        console.log('Loading world explorer, useGridSystem:', this.useGridSystem);
+        console.log('Current save data:', this.currentSave);
+        
         if (this.useGridSystem) {
             // Initialize grid-based world explorer
             this.gridWorldExplorer = new GridWorldExplorer(this, this.fruitLoader);
             const levelId = this.currentSave.currentArea === 'vegetable_patch' ? 
                 'vegetable_patch_grid' : (this.currentSave.currentArea + '_grid');
+            console.log(`Loading grid level: ${levelId} for area: ${this.currentSave.currentArea}`);
             await this.gridWorldExplorer.init(this.currentSave.currentWorld, levelId);
             console.log('Grid world explorer loaded successfully');
         } else {
