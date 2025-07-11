@@ -27,7 +27,8 @@ class GridSystem {
             y: 0,
             targetX: 0,
             targetY: 0,
-            smoothing: 0.1
+            smoothing: 0.1,
+            instantMovement: true  // True Pokemon style
         };
         
         // Screen dimensions for centering
@@ -97,25 +98,32 @@ class GridSystem {
      * Load level from grid-based JSON format
      */
     loadLevel(levelData) {
+        console.log('Grid system loading level:', levelData.id || 'unknown');
         this.clearGrid();
         
         if (levelData.grid_layout) {
+            console.log('Loading from grid_layout');
             this.loadFromGridLayout(levelData.grid_layout);
         } else if (levelData.tile_map) {
+            console.log('Loading from tile_map');
             this.loadFromTileMap(levelData.tile_map);
         } else {
-            // Generate default grass level
+            console.log('No grid data found, generating default level');
             this.generateDefaultLevel();
         }
         
         // Set player starting position
         if (levelData.player_start) {
+            console.log('Setting player start position:', levelData.player_start);
             this.setPlayerPosition(levelData.player_start.x, levelData.player_start.y);
         } else {
-            this.setPlayerPosition(Math.floor(this.gridWidth / 2), Math.floor(this.gridHeight / 2));
+            const defaultX = Math.floor(this.gridWidth / 2);
+            const defaultY = Math.floor(this.gridHeight / 2);
+            console.log(`No start position defined, using center: (${defaultX}, ${defaultY})`);
+            this.setPlayerPosition(defaultX, defaultY);
         }
         
-        console.log('Grid level loaded');
+        console.log('Grid level loaded successfully');
     }
 
     /**
@@ -225,6 +233,8 @@ class GridSystem {
             this.playerGridX = gridX;
             this.playerGridY = gridY;
             this.updatePlayerPixelPosition();
+            console.log(`Player positioned at grid (${gridX}, ${gridY}), pixel (${this.playerPixelX}, ${this.playerPixelY})`);
+            console.log(`Camera at (${this.camera.x}, ${this.camera.y})`);
         }
     }
 
@@ -254,8 +264,16 @@ class GridSystem {
         this.camera.targetY = Math.max(0, Math.min(this.camera.targetY, worldHeight - this.screenHeight));
         
         // True Pokemon style - instant camera movement
+        const oldCameraX = this.camera.x;
+        const oldCameraY = this.camera.y;
         this.camera.x = this.camera.targetX;
         this.camera.y = this.camera.targetY;
+        
+        // Log camera movement for debugging
+        if (oldCameraX !== this.camera.x || oldCameraY !== this.camera.y) {
+            console.log(`Camera moved from (${oldCameraX}, ${oldCameraY}) to (${this.camera.x}, ${this.camera.y})`);
+            console.log(`Player at pixel (${this.playerPixelX}, ${this.playerPixelY}), screen center (${this.screenCenterX}, ${this.screenCenterY})`);
+        }
         
         // For smooth camera movement, uncomment these instead:
         // this.camera.x += (this.camera.targetX - this.camera.x) * this.camera.smoothing;

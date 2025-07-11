@@ -65,20 +65,23 @@ class GridWorldExplorer {
         try {
             // Try to load grid-based level data
             const levelPath = `@cucumber-world/worlds/${worldId}/levels/${levelId}.json`;
+            console.log(`Attempting to load grid level from: ${levelPath}`);
             const response = await fetch(levelPath);
             
             if (!response.ok) {
-                throw new Error(`Failed to load level: ${levelPath}`);
+                throw new Error(`Failed to load level: ${levelPath} (${response.status})`);
             }
             
             this.levelData = await response.json();
             this.currentWorld = worldId;
             this.currentLevel = levelId;
             
+            console.log('Grid level data loaded:', this.levelData);
+            
             // Load level into grid system
             this.gridSystem.loadLevel(this.levelData);
             
-            console.log('Grid level loaded:', levelId);
+            console.log('Grid level loaded successfully:', levelId);
         } catch (error) {
             console.error('Failed to load grid level:', error);
             // Create a fallback level
